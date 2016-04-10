@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
+// Don't pay too much attention to this class, it fixes a weird bug with the server and shouldn't be necessary
 public class Client {
 
 	private DatagramSocket socket;
