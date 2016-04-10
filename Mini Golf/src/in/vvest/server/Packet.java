@@ -7,7 +7,8 @@ public class Packet {
 
 	private PacketType type;
 	private byte[] data;
-	private int usedData;
+	private int writtenData;
+	private int readData;
 
 	public Packet(byte[] data) {
 		for (PacketType p : PacketType.values()) {
@@ -17,7 +18,8 @@ public class Packet {
 		if (type == null)
 			type = PacketType.INVALID;
 		this.data = data;
-		this.usedData = data.length;
+		this.writtenData = data.length;
+		readData = 1;
 	}
 
 	public Packet(PacketType type, byte[] data) {
@@ -27,7 +29,8 @@ public class Packet {
 		for (int i = 1; i < this.data.length; i++) {
 			this.data[i] = data[i - 1];
 		}
-		this.usedData = 1;
+		this.writtenData = 1;
+		readData = 1;
 	}
 	
 	public PacketType getType() {
@@ -47,9 +50,9 @@ public class Packet {
 				}
 				data = longerData;
 			}
-			data[i + usedData] = newData[i];
+			data[i + writtenData] = newData[i];
 		}
-		usedData += newData.length;
+		writtenData += newData.length;
 	}
 	
 	public void addColor(Color c) {
@@ -81,7 +84,7 @@ public class Packet {
 		addData(bytes);
 	}
 	
-	public Color decodeColor(int index) {
+	private Color decodeColor(int index) {
 		int[] rgb = new int[3];
 		for (int i = index; i < index + 3; i++) {
 			int val = data[i];
@@ -91,7 +94,7 @@ public class Packet {
 		return new Color(rgb[0], rgb[1], rgb[2]);
 	}
 	
-	public String decodeString(int index) {
+	private String decodeString(int index) {
 		int end = index;
 		for (end = index; end < data.length; end++) {
 			if (data[end] == 0) break;
@@ -103,12 +106,46 @@ public class Packet {
 		return new String(stringData);
 	}
 	
-	public double decodeDouble(int index) {
+	private double decodeDouble(int index) {
 		ByteBuffer bb = ByteBuffer.wrap(data);
 		return bb.getDouble(index);
 	}
 	
-	public boolean decodeBoolean(int index) {
+	private boolean decodeBoolean(int index) {
 		return data[index] != 0;
+	}
+	
+	private byte decodeByte(int index) {
+		return data[index];
+	}
+	
+	public Color nextColor() {
+		Color res = decodeColor(readData);
+		readData += 3;
+		return res;
+	}
+	
+	public String nextString() {
+		String res = decodeString(readData);
+		readData += res.getBytes().length;
+		return res;
+	}
+	
+	public double nextDouble() {
+		double res = decodeDouble(readData);
+		readData += 8;
+		return res;
+	}
+	
+	public boolean nextBoolean() {
+		boolean res = decodeBoolean(readData);
+		readData++;
+		return res;
+	}
+	
+	public byte nextByte() {
+		byte res = decodeByte(readData);
+		readData++;
+		return res;
 	}
 }

@@ -48,11 +48,11 @@ public class OnlinePlayer extends Player implements Runnable {
 				if (p.getType() == PacketType.PONG) {
 					console.write("SRVR","PONG");
 				} else if (p.getType() == PacketType.CONNECT) {
-					Color c = p.decodeColor(1);
+					Color c = p.nextColor();
 					players.add(new Player(getScoreCard().length, c));
 					console.write("SRV", Game.colorString(c) + " has connected");
 				} else if (p.getType() == PacketType.DISCONNECT) {
-					Color c = p.decodeColor(1);
+					Color c = p.nextColor();
 					for (int i = 0; i < players.size(); i++) {
 						if (players.get(i).getColor().equals(c)) {
 							players.remove(i);
@@ -61,9 +61,11 @@ public class OnlinePlayer extends Player implements Runnable {
 					}
 					console.write("SRV", Game.colorString(c) + " has disconnected");
 				} else if (p.getType() == PacketType.MESSAGE) {
-					console.write(Game.colorString(p.decodeColor(1)), p.decodeString(4));
+					Color sender = p.nextColor();
+					String msg = p.nextString();
+					console.write(Game.colorString(sender), msg);
 				} else if (p.getType() == PacketType.UPDATE) {
-					Color c = p.decodeColor(1);
+					Color c = p.nextColor();
 					Player player = null;
 					for (int i = 0; i < players.size(); i++) {
 						if (players.get(i).getColor().equals(c)) {
@@ -75,14 +77,20 @@ public class OnlinePlayer extends Player implements Runnable {
 						player = new Player(getScoreCard().length, c);
 						players.add(player);
 					}
-					player.setCurrentHole(data[4]);
-					player.getBall().setPos(new Vec2(p.decodeDouble(5), p.decodeDouble(13)));
-					player.getBall().setVel(new Vec2(p.decodeDouble(21), p.decodeDouble(29)));
-					player.setAngle(p.decodeDouble(37));
-					player.setPower(p.decodeDouble(45));
+					player.setCurrentHole(p.nextByte());
+					double x = p.nextDouble();
+					double y = p.nextDouble();
+					double velX = p.nextDouble();
+					double velY = p.nextDouble();
+					double angle = p.nextDouble();
+					double power = p.nextDouble();
+					player.getBall().setPos(new Vec2(x, y));
+					player.getBall().setVel(new Vec2(velX, velY));
+					player.setAngle(angle);
+					player.setPower(power);
 					int[] scoreCard = new int[player.getScoreCard().length];
 					for (int i = 0; i < scoreCard.length; i++) {
-						scoreCard[i] = data[53 + i];
+						scoreCard[i] = p.nextByte();
 					}
 					player.setScoreCard(scoreCard);
 				}

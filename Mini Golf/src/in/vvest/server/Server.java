@@ -41,22 +41,14 @@ public class Server extends Thread {
 					sendData(PacketType.PONG.createPacket(), dataPacket.getAddress(), dataPacket.getPort());
 				} else if (p.getType() == PacketType.CONNECT) {
 					System.out.println("Connection!");
-					clients.add(new ConnectedPlayer(dataPacket.getAddress(), dataPacket.getPort(), socket, p.decodeColor(1)));
-					System.out.println(clients.size() + " players connnected");
-					Packet packet = PacketType.CONNECT.createPacket();
-					packet.addColor(p.decodeColor(1));
-					byte[] numConnected = {(byte) (clients.size())};
-					packet.addData(numConnected);
+					Color c = p.nextColor();
+					clients.add(new ConnectedPlayer(dataPacket.getAddress(), dataPacket.getPort(), socket, c));
 					for (int i = 0; i < clients.size(); i++) {
-						clients.get(i).sendData(packet);
+						clients.get(i).sendData(p);
 					}
 				} else if (p.getType() == PacketType.DISCONNECT) {
 					System.out.println("Disconnection!");
-					Color color = p.decodeColor(1);
-					p = PacketType.DISCONNECT.createPacket();
-					p.addColor(color);
-					byte[] numConnected = {(byte) (clients.size() - 1)};
-					p.addData(numConnected);
+					Color color = p.nextColor();
 					for (int i = clients.size() - 1; i >= 0; i--) {
 						if (clients.get(i).getColor().equals(color)) {
 							clients.remove(i);
@@ -69,7 +61,7 @@ public class Server extends Thread {
 						clients.get(i).sendData(p);
 					}
 				} else if (p.getType() == PacketType.COLOR_IN_USE) {
-					Color c = p.decodeColor(1);
+					Color c = p.nextColor();
 					boolean available = true;
 					for (int i = 0; i < clients.size(); i++) {
 						if (clients.get(i).getColor().equals(c)) {
@@ -82,7 +74,7 @@ public class Server extends Thread {
 					packet.addBoolean(available);
 					sendData(packet, dataPacket.getAddress(), dataPacket.getPort());
 				} else if (p.getType() == PacketType.UPDATE) {
-					Color c = p.decodeColor(1);
+					Color c = p.nextColor();
 					for (int i = 0; i < clients.size(); i++) {
 						if (!clients.get(i).getColor().equals(c))
 							clients.get(i).sendData(p);

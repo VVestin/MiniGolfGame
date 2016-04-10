@@ -58,10 +58,10 @@ public class MainMenu extends GameState implements Runnable {
 				socket.receive(dataPacket);
 				Packet p = new Packet(data);
 				if (p.getType() == PacketType.COLOR_IN_USE) {
-					Color c = p.decodeColor(1);
+					Color c = p.nextColor();
 					for (int i = 0; i < Game.COLORS.length; i++) {
 						if (c.equals(Game.COLORS[i])) {
-							colorAvailable[i] = p.decodeBoolean(4);
+							colorAvailable[i] = p.nextBoolean();
 							if (confirmedColor != null && confirmedColor.equals(c)) {
 								if (colorAvailable[i])
 									gsm.setGameState(gsm.getCurrentGameState(), new PlayState(gsm, confirmedColor));
