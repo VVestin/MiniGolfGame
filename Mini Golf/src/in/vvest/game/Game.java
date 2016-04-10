@@ -14,8 +14,8 @@ import in.vvest.gamestates.MainMenu;
 public class Game extends JPanel implements Runnable {
 	private static final long serialVersionUID = 30L;
 	public static final Font LARGE_FONT = new Font("consolas", Font.PLAIN, 50), MEDIUM_FONT = new Font("consolas", Font.PLAIN, 30), SMALL_FONT = new Font("consolas", Font.PLAIN, 12), XTRA_SMALL_FONT = new Font("consolas", Font.PLAIN, 8);
-	public static final Color[] COLORS = {Color.WHITE, Color.RED, Color.BLUE, new Color(255, 192, 203), Color.YELLOW, new Color(123, 63, 0)};
-	public static final String[] COLOR_NAMES = {"WHTE", "RED", "BLUE", "PINK", "YELW", "BRWN"};
+	public static final Color[] COLORS = {Color.WHITE, Color.RED, Color.BLUE, Color.ORANGE, new Color(255, 192, 203), Color.YELLOW, new Color(123, 63, 0)};
+	public static final String[] COLOR_NAMES = {"WHTE", "RED", "BLUE", "ORNG", "PINK", "YELW", "BRWN"};
 	
 	private boolean running = false;
 	private GameStateManager gsm;
