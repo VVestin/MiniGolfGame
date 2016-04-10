@@ -63,7 +63,7 @@ public class Console {
 		int startLine = line;
 		String currentLine = "";
 		for (int j = 0; j < characters.length; j++) {
-			if (xOffset > 150) {
+			if (xOffset > 155) {
 				xOffset = 5;
 				lines.add(currentLine);
 				currentLine = "";
