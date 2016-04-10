@@ -46,7 +46,7 @@ public class OnlinePlayer extends Player implements Runnable {
 				socket.receive(dataPacket);
 				Packet p = new Packet(data);
 				if (p.getType() == PacketType.PONG) {
-					console.write("SRV","PONG");
+					console.write("SRVR","PONG");
 				} else if (p.getType() == PacketType.CONNECT) {
 					Color c = p.decodeColor(1);
 					players.add(new Player(getScoreCard().length, c));

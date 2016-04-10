@@ -14,8 +14,8 @@ import in.vvest.gamestates.MainMenu;
 public class Game extends JPanel implements Runnable {
 	private static final long serialVersionUID = 1L;
 	public static final Font LARGE_FONT = new Font("consolas", Font.PLAIN, 50), MEDIUM_FONT = new Font("consolas", Font.PLAIN, 30), SMALL_FONT = new Font("consolas", Font.PLAIN, 12), XTRA_SMALL_FONT = new Font("consolas", Font.PLAIN, 8);
-	public static final Color[] COLORS = {Color.WHITE, Color.RED, Color.BLUE, Color.MAGENTA, Color.YELLOW, new Color(123, 63, 0)};
-	public static final String[] COLOR_NAMES = {"WHT", "RED", "BLU", "PPL", "YLW", "BRN"};
+	public static final Color[] COLORS = {Color.WHITE, Color.RED, Color.BLUE, new Color(255, 192, 203), Color.YELLOW, new Color(123, 63, 0)};
+	public static final String[] COLOR_NAMES = {"WHTE", "RED", "BLUE", "PINK", "YELW", "BRWN"};
 	
 	private boolean running = false;
 	private GameStateManager gsm;
@@ -91,18 +91,16 @@ public class Game extends JPanel implements Runnable {
 	}
 	
 	public static String colorString(Color c) {
-		String[] names = {"WHT", "RED", "BLU", "PPL", "YLW", "BRN"};
 		for (int i = 0; i < COLORS.length; i++) {
 			if (COLORS[i].equals(c))
-				return names[i];
+				return COLOR_NAMES[i];
 		}
 		return "";
 	}
 	
 	public static Color stringColor(String s) {
-		String[] names = {"WHT", "RED", "BLU", "PPL", "YLW", "BRN"};
 		for (int i = 0; i < COLORS.length; i++) {
-			if (names[i].equals(s))
+			if (COLOR_NAMES[i].equals(s))
 				return COLORS[i];
 		}
 		return null;

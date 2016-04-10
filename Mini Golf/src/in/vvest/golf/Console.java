@@ -110,6 +110,8 @@ public class Console {
 	
 	public void write(String sender, String msg) {
 		if (msg.length() > 0) {
+			if (sender.equals("RED"))
+				sender = "RED ";
 			console.add(sender + ": " + msg);
 			if (console.size() > MAX_SIZE) console.remove();
 		}
