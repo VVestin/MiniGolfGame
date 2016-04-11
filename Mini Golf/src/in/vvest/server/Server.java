@@ -53,7 +53,7 @@ public class Server extends Thread {
 						if (clients.get(i).getColor().equals(color)) {
 							clients.remove(i);
 						} else {
-							clients.get(i).sendData(p);
+							clients.get(i).sendData(p, 500);
 						}
 					}
 				} else if (p.getType() == PacketType.MESSAGE) {

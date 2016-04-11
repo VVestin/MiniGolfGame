@@ -32,5 +32,25 @@ public class ConnectedPlayer {
 			e.printStackTrace();
 		}
 	}
+	
+	public void sendData(Packet packet, int delay) {
+		new Thread(new Runnable() {
+			
+			public void run() {
+				try {
+					Thread.sleep(delay);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				byte[] data = packet.getData();
+				try {
+					socket.send(new DatagramPacket(data, data.length, address, port));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		}).start();	
+	}
 
 }
