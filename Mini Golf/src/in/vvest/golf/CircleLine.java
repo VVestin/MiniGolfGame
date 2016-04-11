@@ -29,14 +29,14 @@ public class CircleLine implements Obstacle {
     }
 
     public boolean resolveCollision(Ball b) {
-        Vec2 circleDir = this.pos.subtract(b.getPos()).normalize().rotate(3.141592653589793);
+        Vec2 circleDir = this.pos.subtract(b.getPos()).normalize().rotate(Math.PI);
         Vec2 circlePoint = circleDir.scale(this.radius).add(this.pos);
         double angle = - circleDir.angle();
         if (angle < 0.0) {
-            angle += 6.283185307179586;
+            angle += 2 * Math.PI;
         }
-        if (circlePoint.distance(b.getPos()) < b.getRadius() && angle > this.start && angle < this.end) {
-            b.setVel(b.getVel().subtract(circleDir.scale(b.getVel().projectedOn(circleDir) * 2.0)));
+        if (circlePoint.distance(b.getPos()) < b.getRadius() && angle > this.start && angle < this.end && (b.getPos().distance(pos) < radius && Math.abs(b.getPos().subtract(pos).angle() - b.getVel().angle()) < Math.PI / 2 || b.getPos().distance(pos) > radius && Math.abs(b.getPos().subtract(pos).angle() - b.getVel().angle()) > Math.PI / 2)) {
+            b.setVel(b.getVel().subtract(circleDir.scale(b.getVel().projectedOn(circleDir) * 2)));
             return true;
         }
         return false;

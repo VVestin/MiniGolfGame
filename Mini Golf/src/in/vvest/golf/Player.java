@@ -26,7 +26,7 @@ public class Player {
 	}
 
 	public void draw(Graphics g) {
-		if (power != 0 && b.getVel().lengthSquared() == 0) {
+		if (b.getVel().lengthSquared() == 0) {
 			g.setColor(Color.BLACK);
 			Vec2 target = b.getPos().add(new Vec2(angle).scale(power));
 			g.drawLine((int) b.getPos().x, (int) b.getPos().y, (int) target.x, (int) target.y);
@@ -40,7 +40,7 @@ public class Player {
 			scoreCard[currentHole] = strokes;
 		if (up && power < 60)
 			power += .5;
-		if (down && power > 0)
+		if (down && power > .5)
 			power -= .5;
 		if (left)
 			angle -= dir / 3;
