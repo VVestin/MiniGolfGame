@@ -3,6 +3,8 @@ package in.vvest.server;
 import java.awt.Color;
 import java.nio.ByteBuffer;
 
+import in.vvest.golf.Obstacle;
+
 public class Packet {
 
 	private PacketType type;
@@ -82,6 +84,10 @@ public class Packet {
 	public void addByte(byte b) {
 		byte[] bytes = {b};
 		addData(bytes);
+	}
+	
+	public void addObstacle(Obstacle o) {
+		
 	}
 	
 	private Color decodeColor(int index) {
