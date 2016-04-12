@@ -127,6 +127,13 @@ public class Console {
 			if (currentEntry.startsWith("/")) {
 				if (currentEntry.substring(1).equalsIgnoreCase("ping")) {
 					player.sendData(PacketType.PING.createPacket());
+				} else if (currentEntry.startsWith("/kick ")) {
+					Color c = Game.stringColor(currentEntry.substring(6));
+					if (c != null) {
+						Packet p = PacketType.DISCONNECT.createPacket();
+						p.addColor(c);
+						player.sendData(p);
+					}
 				}
 			} else {
 				Packet packet = PacketType.MESSAGE.createPacket();

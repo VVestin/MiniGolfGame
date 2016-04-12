@@ -17,6 +17,7 @@ public class Server extends Thread {
 
 	private DatagramSocket socket;
 	private List<ConnectedPlayer> clients;
+	private long lastOfflineCheck;
 
 	public Server() {
 		try {
@@ -40,45 +41,65 @@ public class Server extends Thread {
 					System.out.println("Ping!");
 					sendData(PacketType.PONG.createPacket(), dataPacket.getAddress(), dataPacket.getPort());
 				} else if (p.getType() == PacketType.CONNECT) {
-					System.out.println("Connection!");
 					Color c = p.nextColor();
-					clients.add(new ConnectedPlayer(dataPacket.getAddress(), dataPacket.getPort(), socket, c));
-					for (int i = 0; i < clients.size(); i++) {
-						clients.get(i).sendData(p);
+					if (!isConnected(c)) {
+						System.out.println("Connection!");
+						clients.add(new ConnectedPlayer(dataPacket.getAddress(), dataPacket.getPort(), socket, c));
+						for (int i = 0; i < clients.size(); i++) {
+							clients.get(i).sendData(p);
+						}
 					}
 				} else if (p.getType() == PacketType.DISCONNECT) {
-					System.out.println("Disconnection!");
-					Color color = p.nextColor();
-					for (int i = clients.size() - 1; i >= 0; i--) {
-						if (clients.get(i).getColor().equals(color)) {
-							clients.remove(i);
-						} else {
-							clients.get(i).sendData(p, 500);
+					Color c = p.nextColor();
+					if (isConnected(c)) {				
+						System.out.println("Disconnection!");
+						for (int i = clients.size() - 1; i >= 0; i--) {
+							if (clients.get(i).getColor().equals(c)) {
+								clients.get(i).sendData(p);
+								clients.remove(i);
+							} else {
+								clients.get(i).sendData(p, 500);
+							}
 						}
 					}
 				} else if (p.getType() == PacketType.MESSAGE) {
-					for (int i = 0; i < clients.size(); i++) {
-						clients.get(i).sendData(p);
+					Color c = p.nextColor();
+					if (isConnected(c)) {
+						for (int i = 0; i < clients.size(); i++) {
+							clients.get(i).sendData(p);
+						}
 					}
 				} else if (p.getType() == PacketType.COLOR_IN_USE) {
 					Color c = p.nextColor();
-					boolean available = true;
-					for (int i = 0; i < clients.size(); i++) {
-						if (clients.get(i).getColor().equals(c)) {
-							available = false;
-							break;
-						}
-					}
 					Packet packet = PacketType.COLOR_IN_USE.createPacket();
 					packet.addColor(c);
-					packet.addBoolean(available);
+					packet.addBoolean(!isConnected(c));
 					sendData(packet, dataPacket.getAddress(), dataPacket.getPort());
 				} else if (p.getType() == PacketType.UPDATE) {
 					Color c = p.nextColor();
-					for (int i = 0; i < clients.size(); i++) {
-						if (!clients.get(i).getColor().equals(c))
-							clients.get(i).sendData(p);
-					}					
+					if (isConnected(c)) {
+						for (int i = 0; i < clients.size(); i++) {
+							if (clients.get(i).getColor().equals(c))
+								clients.get(i).setLastUpdate(System.currentTimeMillis());
+							else 								
+								clients.get(i).sendData(p);
+						}					
+					}
+				}
+
+				if (System.currentTimeMillis() - lastOfflineCheck > 10_000) {	
+					for (int i = clients.size() - 1; i >= 0; i--) {
+						if (System.currentTimeMillis() - clients.get(i).getLastUpdate() > 5_000) {				
+							System.out.println("Disconnection!");
+							Packet packet = PacketType.DISCONNECT.createPacket();
+							packet.addColor(clients.get(i).getColor());
+							packet.addByte((byte) (clients.size() - 1)); 
+							for (int j = 0; j < clients.size(); j++)
+								clients.get(i).sendData(packet);
+							clients.remove(i);
+						}
+					}
+					lastOfflineCheck = System.currentTimeMillis();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -86,6 +107,15 @@ public class Server extends Thread {
 		}
 	}
 
+	private boolean isConnected(Color c) {
+		for (int i = 0; i < clients.size(); i++) {
+			if (clients.get(i).getColor().equals(c)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	private void sendData(Packet packet, InetAddress address, int port) {
 		byte[] data = packet.getData();
 		try {

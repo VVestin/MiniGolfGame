@@ -45,6 +45,7 @@ public class OnlinePlayer extends Player implements Runnable {
 				DatagramPacket dataPacket = new DatagramPacket(data, data.length);
 				socket.receive(dataPacket);
 				Packet p = new Packet(data);
+				// TODO make code more robust for errors the server could have
 				if (p.getType() == PacketType.PONG) {
 					console.write("SRVR","PONG");
 				} else if (p.getType() == PacketType.CONNECT) {
@@ -53,6 +54,9 @@ public class OnlinePlayer extends Player implements Runnable {
 					console.write("SRV", Game.colorString(c) + " has connected");
 				} else if (p.getType() == PacketType.DISCONNECT) {
 					Color c = p.nextColor();
+					if (c.equals(getColor())) {
+						System.exit(0);
+					}
 					for (int i = 0; i < players.size(); i++) {
 						if (players.get(i).getColor().equals(c)) {
 							players.remove(i);
