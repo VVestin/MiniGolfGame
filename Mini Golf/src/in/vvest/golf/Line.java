@@ -38,5 +38,8 @@ public class Line implements Obstacle {
 	public Vec2 getB() {
 		return b;
 	}
-	
+    
+    public ObstacleID getID() {
+    	return ObstacleID.LINE;
+    }	
 }

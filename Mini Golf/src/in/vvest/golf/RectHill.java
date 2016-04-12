@@ -40,4 +40,23 @@ public class RectHill implements Obstacle {
 		return false;
 	}
 
+	public Vec2 getPos() {
+		return pos;
+	}
+	
+	public double getWidth() {
+		return width;
+	}
+	
+	public double getHeight() {
+		return height;
+	}
+	
+	public Vec2 getAcc() {
+		return acc;
+	}
+	
+    public ObstacleID getID() {
+    	return ObstacleID.RECT_HILL;
+    }
 }

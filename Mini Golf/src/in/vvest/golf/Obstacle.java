@@ -6,5 +6,6 @@ public interface Obstacle {
 
 	public void draw(Graphics g);
 	public boolean resolveCollision(Ball b);
+	public ObstacleID getID();
 	
 }

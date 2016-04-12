@@ -22,5 +22,20 @@ public class RectGrass implements Obstacle {
 	public boolean resolveCollision(Ball b) {
 		return false;
 	}
-
+	
+	public Vec2 getPos() {
+		return pos;
+	}
+	
+	public double getWidth() {
+		return width;
+	}
+	
+	public double getHeight() {
+		return height;
+	}
+    
+    public ObstacleID getID() {
+    	return ObstacleID.RECT_GRASS;
+    }
 }

@@ -35,4 +35,28 @@ public class CircleHill implements Obstacle {
         }
         return false;
     }
+    
+    public Vec2 getPos() {
+		return pos;
+	}
+
+	public double getRadius() {
+		return radius;
+	}
+
+	public double getStart() {
+		return start;
+	}
+
+	public double getEnd() {
+		return end;
+	}
+
+	public double getAcc() {
+		return acc;
+	}
+
+	public ObstacleID getID() {
+    	return ObstacleID.CIRCLE_HILL;
+    }
 }

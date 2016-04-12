@@ -28,4 +28,15 @@ public class Hole implements Obstacle {
 		return false;
 	}
 	
+	public Vec2 getPos() {
+		return pos;
+	}
+	
+	public double getRadius() {
+		return radius;
+	}
+    
+    public ObstacleID getID() {
+    	return ObstacleID.HOLE;
+    }	
 }

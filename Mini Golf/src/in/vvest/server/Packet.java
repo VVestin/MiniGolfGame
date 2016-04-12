@@ -3,7 +3,17 @@ package in.vvest.server;
 import java.awt.Color;
 import java.nio.ByteBuffer;
 
+import in.vvest.golf.CircleHill;
+import in.vvest.golf.CircleLine;
+import in.vvest.golf.CircleWall;
+import in.vvest.golf.Hole;
+import in.vvest.golf.Line;
 import in.vvest.golf.Obstacle;
+import in.vvest.golf.ObstacleID;
+import in.vvest.golf.RectGrass;
+import in.vvest.golf.RectHill;
+import in.vvest.golf.Vec2;
+import in.vvest.golf.Wall;
 
 public class Packet {
 
@@ -87,7 +97,63 @@ public class Packet {
 	}
 	
 	public void addObstacle(Obstacle o) {
-		
+		if (o.getID() == ObstacleID.CIRCLE_HILL) {
+			CircleHill ch = (CircleHill) o;
+			addDouble(ch.getPos().x);
+			addDouble(ch.getPos().y);
+			addDouble(ch.getRadius());
+			addDouble(ch.getStart());
+			addDouble(ch.getEnd());
+			addDouble(ch.getAcc());			
+		} else if (o.getID() == ObstacleID.CIRCLE_LINE) {
+			CircleLine cl = (CircleLine) o;
+			addDouble(cl.getPos().x);
+			addDouble(cl.getPos().y);
+			addDouble(cl.getRadius());
+			addDouble(cl.getStart());
+			addDouble(cl.getEnd());
+			addBoolean(cl.isFilled());
+		} else if (o.getID() == ObstacleID.CIRCLE_WALL) {
+			CircleWall cw = (CircleWall) o;
+			addDouble(cw.getPos().x);
+			addDouble(cw.getPos().y);
+			addDouble(cw.getRadius());
+			addDouble(cw.getStart());
+			addDouble(cw.getEnd());
+			addDouble(cw.getThickness());
+		} else if (o.getID() == ObstacleID.HOLE) {
+			Hole h = (Hole) o;
+			addDouble(h.getPos().x);
+			addDouble(h.getPos().y);
+			addDouble(h.getRadius());
+		} else if (o.getID() == ObstacleID.LINE) {
+			Line l = (Line) o;
+			addDouble(l.getA().x);
+			addDouble(l.getA().y);
+			addDouble(l.getB().x);
+			addDouble(l.getB().y);
+		} else if (o.getID() == ObstacleID.RECT_GRASS) {
+			RectGrass rg = (RectGrass) o;
+			addDouble(rg.getPos().x);
+			addDouble(rg.getPos().y);
+			addDouble(rg.getWidth());
+			addDouble(rg.getHeight());
+		} else if (o.getID() == ObstacleID.RECT_HILL) {
+			RectHill rh = (RectHill) o;
+			addDouble(rh.getPos().x);
+			addDouble(rh.getPos().y);
+			addDouble(rh.getWidth());
+			addDouble(rh.getHeight());
+			addDouble(rh.getAcc().x);
+			addDouble(rh.getAcc().y);
+		} else if (o.getID() == ObstacleID.WALL) {
+			Wall w = (Wall) o;
+			addDouble(w.getA().x);
+			addDouble(w.getA().y);
+			addDouble(w.getB().x);
+			addDouble(w.getB().y);
+			addDouble(w.getThickness());
+		}
 	}
 	
 	private Color decodeColor(int index) {
@@ -153,5 +219,28 @@ public class Packet {
 		byte res = decodeByte(readData);
 		readData++;
 		return res;
+	}
+	
+	public Obstacle nextObstacle() {
+		Obstacle o = null;
+		byte id = nextByte();
+		if (id == ObstacleID.CIRCLE_HILL.getID()) {
+			o = new CircleHill(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), nextDouble(), nextDouble());	
+		} else if (id == ObstacleID.CIRCLE_LINE.getID()) {
+			o = new CircleLine(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), nextDouble(), nextBoolean());
+		} else if (id == ObstacleID.CIRCLE_WALL.getID()) {
+			o = new CircleWall(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), nextDouble(), nextDouble());
+		} else if (id == ObstacleID.HOLE.getID()) {
+			o = new Hole(new Vec2(nextDouble(), nextDouble()), nextDouble());
+		} else if (id == ObstacleID.LINE.getID()) {
+			o = new Line(new Vec2(nextDouble(), nextDouble()), new Vec2(nextDouble(), nextDouble()));
+		} else if (id == ObstacleID.RECT_GRASS.getID()) {
+			o = new RectGrass(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble());
+		} else if (id == ObstacleID.RECT_HILL.getID()) {
+			o = new RectHill(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), new Vec2(nextDouble(), nextDouble()));
+		} else if (id == ObstacleID.WALL.getID()) {
+			o = new Wall(new Vec2(nextDouble(), nextDouble()), new Vec2(nextDouble(), nextDouble()), nextDouble());
+		}
+		return o;
 	}
 }

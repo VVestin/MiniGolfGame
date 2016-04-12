@@ -127,7 +127,7 @@ public class Server extends Thread {
 
 	private static InetAddress getAddress() {
 		try {
-			return InetAddress.getLocalHost();
+			return InetAddress.getByName("67.177.226.182");
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}

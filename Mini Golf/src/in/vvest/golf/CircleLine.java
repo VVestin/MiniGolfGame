@@ -53,4 +53,16 @@ public class CircleLine implements Obstacle {
     public double getEnd() {
         return this.end;
     }
+    
+    public Vec2 getPos() {
+		return pos;
+	}
+
+	public boolean isFilled() {
+		return filled;
+	}
+
+	public ObstacleID getID() {
+    	return ObstacleID.CIRCLE_LINE;
+    }
 }

@@ -30,4 +30,8 @@ public class PolygonGrass implements Obstacle {
     public boolean resolveCollision(Ball b) {
         return false;
     }
+    
+    public ObstacleID getID() {
+    	return null;
+    }
 }
