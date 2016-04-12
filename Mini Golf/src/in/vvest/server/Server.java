@@ -33,7 +33,7 @@ public class Server extends Thread {
 		System.out.println("Starting Server");
 		while (true) {
 			try {
-				byte[] data = new byte[256];
+				byte[] data = new byte[Packet.MAX_SIZE];
 				DatagramPacket dataPacket = new DatagramPacket(data, data.length);
 				socket.receive(dataPacket);
 				Packet p = new Packet(data);

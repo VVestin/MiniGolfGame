@@ -16,6 +16,7 @@ import in.vvest.golf.Vec2;
 import in.vvest.golf.Wall;
 
 public class Packet {
+	public static final int MAX_SIZE = 128;
 
 	private PacketType type;
 	private byte[] data;
@@ -222,25 +223,24 @@ public class Packet {
 	}
 	
 	public Obstacle nextObstacle() {
-		Obstacle o = null;
 		byte id = nextByte();
 		if (id == ObstacleID.CIRCLE_HILL.getID()) {
-			o = new CircleHill(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), nextDouble(), nextDouble());	
+			return new CircleHill(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), nextDouble(), nextDouble());	
 		} else if (id == ObstacleID.CIRCLE_LINE.getID()) {
-			o = new CircleLine(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), nextDouble(), nextBoolean());
+			return new CircleLine(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), nextDouble(), nextBoolean());
 		} else if (id == ObstacleID.CIRCLE_WALL.getID()) {
-			o = new CircleWall(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), nextDouble(), nextDouble());
+			return new CircleWall(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), nextDouble(), nextDouble());
 		} else if (id == ObstacleID.HOLE.getID()) {
-			o = new Hole(new Vec2(nextDouble(), nextDouble()), nextDouble());
+			return new Hole(new Vec2(nextDouble(), nextDouble()), nextDouble());
 		} else if (id == ObstacleID.LINE.getID()) {
-			o = new Line(new Vec2(nextDouble(), nextDouble()), new Vec2(nextDouble(), nextDouble()));
+			return new Line(new Vec2(nextDouble(), nextDouble()), new Vec2(nextDouble(), nextDouble()));
 		} else if (id == ObstacleID.RECT_GRASS.getID()) {
-			o = new RectGrass(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble());
+			return new RectGrass(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble());
 		} else if (id == ObstacleID.RECT_HILL.getID()) {
-			o = new RectHill(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), new Vec2(nextDouble(), nextDouble()));
+			return new RectHill(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), new Vec2(nextDouble(), nextDouble()));
 		} else if (id == ObstacleID.WALL.getID()) {
-			o = new Wall(new Vec2(nextDouble(), nextDouble()), new Vec2(nextDouble(), nextDouble()), nextDouble());
+			return new Wall(new Vec2(nextDouble(), nextDouble()), new Vec2(nextDouble(), nextDouble()), nextDouble());
 		}
-		return o;
+		return null;
 	}
 }

@@ -53,7 +53,7 @@ public class MainMenu extends GameState implements Runnable {
 	public void run() {
 		while (true) {
 			try {
-				byte[] data = new byte[256];
+				byte[] data = new byte[5];
 				DatagramPacket dataPacket = new DatagramPacket(data, data.length);
 				socket.receive(dataPacket);
 				Packet p = new Packet(data);
@@ -62,11 +62,8 @@ public class MainMenu extends GameState implements Runnable {
 					for (int i = 0; i < Game.COLORS.length; i++) {
 						if (c.equals(Game.COLORS[i])) {
 							colorAvailable[i] = p.nextBoolean();
-							if (confirmedColor != null && confirmedColor.equals(c)) {
-								if (colorAvailable[i])
+							if (confirmedColor != null && confirmedColor.equals(c) && colorAvailable[i])
 									gsm.setGameState(gsm.getCurrentGameState(), new PlayState(gsm, confirmedColor));
-								;
-							}
 							break;
 						}
 					}
