@@ -9,7 +9,7 @@ import java.awt.Graphics2D;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import in.vvest.gamestates.MainMenu;
+import in.vvest.gamestates.LevelEditorState;
 
 public class Game extends JPanel implements Runnable {
 	private static final long serialVersionUID = 30L;
@@ -24,7 +24,7 @@ public class Game extends JPanel implements Runnable {
 		Dimension size = new Dimension(800, 800);
 				
 		gsm = new GameStateManager();
-		gsm.addGameState(new MainMenu(gsm));
+		gsm.addGameState(new LevelEditorState(gsm));
 		
 		setPreferredSize(size);
 		setMinimumSize(size);
