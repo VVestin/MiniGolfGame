@@ -13,9 +13,10 @@ import in.vvest.leveleditor.TranslationPoint;
 
 public class CircleHill implements Obstacle {
 	private Vec2 pos;
-	private double radius, start, end, acc;
+	private double radius, acc;
+	private int start, end;
 
-	public CircleHill(Vec2 pos, double radius, double start, double end, double acc) {
+	public CircleHill(Vec2 pos, double radius, int start, int end, double acc) {
 		this.pos = pos;
 		this.radius = radius;
 		this.start = start;
@@ -26,19 +27,19 @@ public class CircleHill implements Obstacle {
 	public void draw(Graphics g) {
 		g.setColor(Color.GREEN.darker());
 		g.fillArc((int) (this.pos.x - this.radius), (int) (this.pos.y - this.radius), (int) (this.radius * 2.0),
-				(int) (this.radius * 2.0), (int) Math.toDegrees(this.start),
-				(int) Math.toDegrees(this.end - this.start));
+				(int) (this.radius * 2.0), this.start, this.end - this.start);
 	}
 
 	public boolean resolveCollision(Ball b) {
-		Vec2 circleDir = this.pos.subtract(b.getPos()).normalize().rotate(3.141592653589793);
+		Vec2 circleDir = this.pos.subtract(b.getPos()).normalize().rotate(180);
 		double angle = -circleDir.angle();
-		if (angle < 0.0) {
-			angle += Math.PI * 2;
+		if (angle < 0) {
+			angle += 360;
 		}
-		if (this.pos.distance(b.getPos()) < this.radius && this.pos.distance(b.getPos()) > 1.0 && angle > this.start
+		if (this.pos.distance(b.getPos()) < this.radius && this.pos.distance(b.getPos()) > 1 && angle > this.start
 				&& angle < this.end) {
-			b.setVel(b.getVel().subtract(b.getPos().subtract(this.pos).normalize().scale(this.acc / 25.0)));
+			b.setVel(b.getVel()
+					.subtract(b.getPos().subtract(this.pos).normalize().scale(this.acc / Ball.UPDATE_INTERVAL)));
 			return true;
 		}
 		return false;
@@ -66,14 +67,26 @@ public class CircleHill implements Obstacle {
 
 	public ArrayList<AdjustablePoint> getAdjustmentPoints() {
 		ArrayList<AdjustablePoint> points = new ArrayList<AdjustablePoint>();
-		points.add(new TranslationPoint());
+		points.add(new TranslationPoint() {
+			public void update(Obstacle o, Map<String, Boolean> keyState) {
+				super.update(o, keyState);
+				if (keyState.containsKey("q") && keyState.get("q")) {
+					start += 1;
+					end += 1;
+				} else if (keyState.containsKey("e") && keyState.get("e")) {
+					start -= 1;
+					end -= 1;
+				}
+			}
+		});
 		// Adjusts start
 		points.add(new AbstractAdjustablePoint() {
 			public void update(Obstacle o, Map<String, Boolean> keyState) {
-				if (keyState.containsKey("a") && keyState.get("a")) {
-					start += Math.PI / 60;
-				} else if (keyState.containsKey("d") && keyState.get("d")) {
-					start -= Math.PI / 60;
+				if (keyState.containsKey("a") && keyState.get("a") && Math.abs(start + 1 - end) <= 360) {
+					start += 1;
+				} else if (keyState.containsKey("d") && keyState.get("d")
+						&& Math.abs(start - 1 - end) <= 360) {
+					start -= 1;
 				}
 			}
 
@@ -81,13 +94,30 @@ public class CircleHill implements Obstacle {
 				return new Vec2(-start).scale(radius).add(pos);
 			}
 		});
+		// Adjusts radius
+		points.add(new AbstractAdjustablePoint() {
+			public void update(Obstacle o, Map<String, Boolean> keyState) {
+				if (keyState.containsKey("w") && keyState.get("w")) {
+					radius++;
+				} else if (keyState.containsKey("s") && keyState.get("s")) {
+					radius--;
+				}
+			}
+
+			protected Vec2 getPos(Obstacle o) {
+				return new Vec2(-((end + start) / 2d)).scale(radius).add(pos);
+			}
+		});
+
 		// Adjusts end
 		points.add(new AbstractAdjustablePoint() {
 			public void update(Obstacle o, Map<String, Boolean> keyState) {
-				if (keyState.containsKey("a") && keyState.get("a")) {
-					end += Math.PI / 60;
-				} else if (keyState.containsKey("d") && keyState.get("d")) {
-					end -= Math.PI / 60;
+				if (keyState.containsKey("a") && keyState.get("a")
+						&& Math.abs(end + 1 / 60 - start) <= 360) {
+					end += 1;
+				} else if (keyState.containsKey("d") && keyState.get("d")
+						&& Math.abs(end - 1 - start) <= 360) {
+					end -= 1;
 				}
 			}
 
@@ -95,6 +125,7 @@ public class CircleHill implements Obstacle {
 				return new Vec2(-end).scale(radius).add(pos);
 			}
 		});
+
 		return points;
 	}
 

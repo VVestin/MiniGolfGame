@@ -11,29 +11,31 @@ public class Player {
 	
 	private Ball b;
 	private Color color;
-	private double power, angle, dir;
+	private double power;
 	private boolean up, down, left, right;
-	private int strokes;
+	private int strokes, currentHole, angle, dir;
 	private int[] scoreCard;
-	private int currentHole;
 
 	public Player(int numHoles, Color color) {
 		scoreCard = new int[numHoles];
 		this.color = color;
 		b = new Ball(new Vec2(50, 50), 4);
 		power = 30;
-		angle = -Math.PI / 2;
-		dir = Math.PI / 60;
+		angle = -90;
+		dir = 1;
 		currentHole = -1;
 	}
 
 	public void draw(Graphics g) {
 		if (b.getVel().lengthSquared() == 0) {
 			g.setColor(Color.BLACK);
-			Vec2 target = b.getPos().add(new Vec2(angle).scale(power));
+			Vec2 target = b.getPos().add(new Vec2(Math.toRadians(angle)).scale(power));
 			g.drawLine((int) b.getPos().x, (int) b.getPos().y, (int) target.x, (int) target.y);
 		}
 		b.draw(g, color);
+		g.setColor(Color.WHITE);
+		g.drawString("" + (360 - angle), 5, 17);
+		g.drawString("" + power, 5, 25);
 	}
 
 	public void update(List<Obstacle> obstacles) {			
@@ -45,12 +47,12 @@ public class Player {
 		if (down && power > .5)
 			power -= .5;
 		if (left)
-			angle -= dir / 3;
+			angle -= dir;
 		if (right)
-			angle += dir / 3;
-		angle = angle % (Math.PI * 2);
+			angle += dir;
+		angle = angle % 360;
 		if (angle < 0)
-			angle += Math.PI * 2;
+			angle += 360;
 	}
 	
 	public Ball getBall() {
@@ -65,7 +67,7 @@ public class Player {
 		return b.isInHole();
 	}
 	
-	public double getAngle() {
+	public int getAngle() {
 		return angle;
 	}
 	
@@ -85,7 +87,7 @@ public class Player {
 		return color;
 	}
 	
-	public void setAngle(double angle) {
+	public void setAngle(int angle) {
 		this.angle = angle;
 	}
 	
@@ -109,7 +111,7 @@ public class Player {
 	public void keyPressed(int k) {
 		if (k == KeyEvent.VK_SPACE) {
 			if (power != 0 && b.getVel().lengthSquared() == 0) {
-				b.setVel(new Vec2(angle).scale(power * power * .008));
+				b.setVel(new Vec2(Math.toRadians(angle)).scale(power * power * .008));
 				strokes++;
 			}
 		} else if ((k == KeyEvent.VK_UP || k == KeyEvent.VK_W) && power > 0) {
@@ -130,16 +132,16 @@ public class Player {
 			down = false;
 		} else if ((k == KeyEvent.VK_LEFT || k == KeyEvent.VK_A) && power > 0) {
 			left = false;
-			if (Math.abs(angle) > Math.PI)
-				dir = Math.PI / 60;
+			if (Math.abs(angle) > 180)
+				dir = 1;
 			else
-				dir = -Math.PI / 60;
+				dir = -1;
 		} else if ((k == KeyEvent.VK_RIGHT || k == KeyEvent.VK_D) && power > 0) {
 			right = false;
-			if (Math.abs(angle) > Math.PI)
-				dir = Math.PI / 60;
+			if (Math.abs(angle) > 180)
+				dir = 1;
 			else
-				dir = -Math.PI / 60;
+				dir = -1;
 		}
 	}
 }

@@ -16,7 +16,7 @@ import in.vvest.server.Packet;
 import in.vvest.server.PacketType;
 import in.vvest.server.Server;
 
-public class MainMenu extends GameState implements Runnable {
+public class MainMenuState extends GameState implements Runnable {
 
 	private int selectedColor;
 	private boolean[] colorAvailable;
@@ -26,7 +26,7 @@ public class MainMenu extends GameState implements Runnable {
 	private int port;
 	private long lastAvailabilityCheck;
 
-	public MainMenu(GameStateManager gsm) {
+	public MainMenuState(GameStateManager gsm) {
 		super(gsm);
 		address = Server.ADDRESS;
 		port = Server.PORT;

@@ -10,12 +10,13 @@ public class AdjustableObstacle {
 
 	private Obstacle obstacle;
 	private ArrayList<AdjustablePoint> adjustmentPoints;
+	private boolean tab, shift;
 	private int currentPoint;
 	
 	public AdjustableObstacle(Obstacle obstacle) {
 		this.obstacle = obstacle;
 		adjustmentPoints = obstacle.getAdjustmentPoints();
-		currentPoint = 1;
+		currentPoint = 0;
 	}
 	
 	public void draw(Graphics g) {
@@ -27,14 +28,23 @@ public class AdjustableObstacle {
 	
 	public void update(Map<String, Boolean> keyState) {
 		adjustmentPoints.get(currentPoint).update(obstacle, keyState);
-		if (keyState.containsKey("tab") && keyState.get("tab")) {
+		if (keyState.containsKey("tab") && keyState.get("tab") && !tab) {
 			currentPoint++;
 			if (currentPoint >= adjustmentPoints.size())
 				currentPoint = 0;
-		} else if (keyState.containsKey("shift") && keyState.get("shift")) {
+			tab = true;
+		} else if (keyState.containsKey("shift") && keyState.get("shift") && !shift) {
 			currentPoint--;
-			if (currentPoint <= 0)
+			if (currentPoint < 0)
 				currentPoint = adjustmentPoints.size() - 1;
+			shift = true;
+		}
+		
+		if (keyState.containsKey("tab") && !keyState.get("tab")) {
+			tab = false;
+		} 
+		if (keyState.containsKey("shift") && !keyState.get("shift")) {
+			shift = false;
 		}
 	}
 	

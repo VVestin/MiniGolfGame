@@ -225,11 +225,11 @@ public class Packet {
 	public Obstacle nextObstacle() {
 		byte id = nextByte();
 		if (id == ObstacleID.CIRCLE_HILL.getID()) {
-			return new CircleHill(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), nextDouble(), nextDouble());	
+			return new CircleHill(new Vec2(nextDouble(), nextDouble()), nextDouble(), (int) nextDouble(), (int) nextDouble(), nextDouble());	
 		} else if (id == ObstacleID.CIRCLE_LINE.getID()) {
-			return new CircleLine(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), nextDouble(), nextBoolean());
+			return new CircleLine(new Vec2(nextDouble(), nextDouble()), nextDouble(), (int) nextDouble(), (int) nextDouble(), nextBoolean());
 		} else if (id == ObstacleID.CIRCLE_WALL.getID()) {
-			return new CircleWall(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), nextDouble(), nextDouble());
+			return new CircleWall(new Vec2(nextDouble(), nextDouble()), nextDouble(), (int) nextDouble(), (int) nextDouble(), nextDouble());
 		} else if (id == ObstacleID.HOLE.getID()) {
 			return new Hole(new Vec2(nextDouble(), nextDouble()), nextDouble());
 		} else if (id == ObstacleID.LINE.getID()) {

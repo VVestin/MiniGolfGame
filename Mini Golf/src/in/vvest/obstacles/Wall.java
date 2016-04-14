@@ -25,8 +25,8 @@ public class Wall implements Obstacle {
         thickness /= 2;
         this.line1 = new Line(a.add(lineNormal.rotate(Math.PI / 2).scale(thickness)), b.add(lineNormal.rotate(Math.PI / 2).scale(thickness)));
         this.line2 = new Line(a.add(lineNormal.rotate(-Math.PI / 2).scale(thickness)), b.add(lineNormal.rotate(-Math.PI / 2).scale(thickness)));
-        this.circleA = new CircleLine(a, thickness, 0, Math.PI * 2, true);
-        this.circleB = new CircleLine(b, thickness, 0, Math.PI * 2, true);
+        this.circleA = new CircleLine(a, thickness, 0, 360, true);
+        this.circleB = new CircleLine(b, thickness, 0, 360, true);
     }
 
     public void draw(Graphics g) {

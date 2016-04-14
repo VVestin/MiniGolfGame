@@ -40,7 +40,7 @@ public class LevelEditorState extends GameState {
 			currentObstacle = null;
 		} else if (currentObstacle == null) {
 			if (isKeyDown("1")) {
-				currentObstacle = new AdjustableObstacle(new CircleHill(new Vec2(200, 200), 50, 0, Math.PI, 0));
+				currentObstacle = new AdjustableObstacle(new CircleHill(new Vec2(200, 200), 50, 0, 180, 0));
 			}
 		}
 	}

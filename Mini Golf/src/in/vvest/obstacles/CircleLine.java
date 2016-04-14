@@ -11,10 +11,11 @@ import java.util.ArrayList;
 
 public class CircleLine implements Obstacle {
     private Vec2 pos;
-    private double radius, start, end;
+    private double radius;
+    private int start, end;
     private boolean filled;
 
-    public CircleLine(Vec2 pos, double radius, double start, double end, boolean filled) {
+    public CircleLine(Vec2 pos, double radius, int start, int end, boolean filled) {
         this.pos = pos;
         this.radius = radius;
         this.start = start;
@@ -38,7 +39,7 @@ public class CircleLine implements Obstacle {
         if (angle < 0.0) {
             angle += 2 * Math.PI;
         }
-        if (circlePoint.distance(b.getPos()) < b.getRadius() && angle > this.start && angle < this.end && (b.getPos().distance(pos) < radius && Math.abs(b.getPos().subtract(pos).angle() - b.getVel().angle()) < Math.PI / 2 || b.getPos().distance(pos) > radius && Math.abs(b.getPos().subtract(pos).angle() - b.getVel().angle()) > Math.PI / 2)) {
+        if (circlePoint.distance(b.getPos()) < b.getRadius() && angle > Math.toRadians(start) && angle < Math.toRadians(end) && (b.getPos().distance(pos) < radius && Math.abs(b.getPos().subtract(pos).angle() - b.getVel().angle()) < Math.PI / 2 || b.getPos().distance(pos) > radius && Math.abs(b.getPos().subtract(pos).angle() - b.getVel().angle()) > Math.PI / 2)) {
             b.setVel(b.getVel().subtract(circleDir.scale(b.getVel().projectedOn(circleDir) * 2)));
             return true;
         }

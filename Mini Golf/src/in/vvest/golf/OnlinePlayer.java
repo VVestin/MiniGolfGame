@@ -87,7 +87,7 @@ public class OnlinePlayer extends Player implements Runnable {
 					double y = p.nextDouble();
 					double velX = p.nextDouble();
 					double velY = p.nextDouble();
-					double angle = p.nextDouble();
+					int angle = (int) p.nextDouble();
 					double power = p.nextDouble();
 					player.getBall().setPos(new Vec2(x, y));
 					player.getBall().setVel(new Vec2(velX, velY));
@@ -114,7 +114,7 @@ public class OnlinePlayer extends Player implements Runnable {
 		packet.addDouble(getBall().getPos().y);
 		packet.addDouble(getBall().getVel().x);
 		packet.addDouble(getBall().getVel().y);
-		packet.addDouble(getAngle());
+		packet.addDouble((double) getAngle());
 		packet.addDouble(getPower());
 		int[] scoreCard = getScoreCard();
 		for (int i = 0; i < scoreCard.length; i++) {

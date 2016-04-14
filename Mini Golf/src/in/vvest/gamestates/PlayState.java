@@ -177,7 +177,7 @@ public class PlayState extends GameState {
 		obstacles.add(new RectGrass(new Vec2(150, 25), 200, 350));
 		obstacles.add(new RectGrass(new Vec2(50, 275), 100, 100));
 		obstacles.add(new RectHill(new Vec2(250, 125), 100, 200, new Vec2(0, -.2)));
-		obstacles.add(new CircleHill(new Vec2(100, 325), 40, 0, Math.PI * 2, .04));
+		obstacles.add(new CircleHill(new Vec2(100, 325), 40, 0, 360, .04));
 		obstacles.add(new Wall(new Vec2(150, 25), new Vec2(350, 25), 4));
 		obstacles.add(new Wall(new Vec2(350, 25), new Vec2(350, 375), 4));
 		obstacles.add(new Wall(new Vec2(350, 375), new Vec2(50, 375), 4));
@@ -200,15 +200,15 @@ public class PlayState extends GameState {
 		obstacles.add(new Wall(new Vec2(259, 250), new Vec2(259, 310), 4));
 		obstacles.add(new Wall(new Vec2(259, 250), new Vec2(285, 200), 4));
 		obstacles.add(new Wall(new Vec2(241, 250), new Vec2(215, 200), 4));
-		obstacles.add(new CircleWall(new Vec2(60, 70), 10, 0, Math.PI * 2, 4));
-		obstacles.add(new CircleWall(new Vec2(70, 180), 10, 0, Math.PI * 2, 4));
-		obstacles.add(new CircleWall(new Vec2(120, 110), 10, 0, Math.PI * 2, 4));
-		obstacles.add(new CircleWall(new Vec2(165, 160), 10, 0, Math.PI * 2, 4));
-		obstacles.add(new CircleWall(new Vec2(175, 60), 10, 0, Math.PI * 2, 4));
-		obstacles.add(new CircleWall(new Vec2(225, 105), 10, 0, Math.PI * 2, 4));
-		obstacles.add(new CircleWall(new Vec2(270, 50), 10, 0, Math.PI * 2, 4));
-		obstacles.add(new CircleWall(new Vec2(295, 150), 10, 0, Math.PI * 2, 4));
-		obstacles.add(new CircleWall(new Vec2(345, 90), 10, 0, Math.PI * 2, 4));
+		obstacles.add(new CircleWall(new Vec2(60, 70), 10, 0, 360, 4));
+		obstacles.add(new CircleWall(new Vec2(70, 180), 10, 0, 360, 4));
+		obstacles.add(new CircleWall(new Vec2(120, 110), 10, 0, 360, 4));
+		obstacles.add(new CircleWall(new Vec2(165, 160), 10, 0, 360, 4));
+		obstacles.add(new CircleWall(new Vec2(175, 60), 10, 0, 360, 4));
+		obstacles.add(new CircleWall(new Vec2(225, 105), 10, 0, 360, 4));
+		obstacles.add(new CircleWall(new Vec2(270, 50), 10, 0, 360, 4));
+		obstacles.add(new CircleWall(new Vec2(295, 150), 10, 0, 360, 4));
+		obstacles.add(new CircleWall(new Vec2(345, 90), 10, 0, 360, 4));
 		obstacles.add(new Hole(new Vec2(250, 280), 5));
 		res[3] = new GolfHole(obstacles, new Vec2(75, 355), 4);
 		for (int i = 4; i < res.length; i++) {
