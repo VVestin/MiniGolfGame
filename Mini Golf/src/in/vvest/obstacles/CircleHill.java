@@ -2,6 +2,8 @@ package in.vvest.obstacles;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -28,6 +30,16 @@ public class CircleHill implements Obstacle {
 		g.setColor(Color.GREEN.darker());
 		g.fillArc((int) (this.pos.x - this.radius), (int) (this.pos.y - this.radius), (int) (this.radius * 2.0),
 				(int) (this.radius * 2.0), this.start, this.end - this.start);
+		Vec2 arrowLoc = new Vec2(Math.toRadians(-((end + start) / 2d))).scale(radius / 2).add(pos);
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setColor(Color.GREEN);
+		AffineTransform old = g2d.getTransform();
+		g2d.translate(arrowLoc.x, arrowLoc.y);
+		g2d.rotate(arrowLoc.subtract(pos).rotate(Math.PI / 2 * (acc > 0 ? 1 : -1)).angle());
+		int[] xPoints = {0, -3, 3};
+		int[] yPoints = {6, -3, -3};
+		g2d.fillPolygon(xPoints, yPoints, 3);
+		g2d.setTransform(old);	
 	}
 
 	public boolean resolveCollision(Ball b) {
@@ -91,7 +103,7 @@ public class CircleHill implements Obstacle {
 			}
 
 			protected Vec2 getPos(Obstacle o) {
-				return new Vec2(-start).scale(radius).add(pos);
+				return new Vec2(-Math.toRadians(start)).scale(radius).add(pos);
 			}
 		});
 		// Adjusts radius
@@ -105,7 +117,7 @@ public class CircleHill implements Obstacle {
 			}
 
 			protected Vec2 getPos(Obstacle o) {
-				return new Vec2(-((end + start) / 2d)).scale(radius).add(pos);
+				return new Vec2(Math.toRadians(-((end + start) / 2d))).scale(radius).add(pos);
 			}
 		});
 
@@ -122,7 +134,7 @@ public class CircleHill implements Obstacle {
 			}
 
 			protected Vec2 getPos(Obstacle o) {
-				return new Vec2(-end).scale(radius).add(pos);
+				return new Vec2(-Math.toRadians(end)).scale(radius).add(pos);
 			}
 		});
 

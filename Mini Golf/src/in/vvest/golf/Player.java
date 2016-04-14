@@ -19,7 +19,7 @@ public class Player {
 	public Player(int numHoles, Color color) {
 		scoreCard = new int[numHoles];
 		this.color = color;
-		b = new Ball(new Vec2(50, 50), 4);
+		b = new Ball(new Vec2(50, 50), Ball.DEFAULT_SIZE);
 		power = 30;
 		angle = -90;
 		dir = 1;
@@ -53,6 +53,10 @@ public class Player {
 		angle = angle % 360;
 		if (angle < 0)
 			angle += 360;
+	}
+	
+	public void dispose() {
+		
 	}
 	
 	public Ball getBall() {

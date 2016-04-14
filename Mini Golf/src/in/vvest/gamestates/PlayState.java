@@ -24,7 +24,7 @@ import in.vvest.server.Server;
 
 public class PlayState extends GameState {
 
-	private OnlinePlayer p;
+	private Player p;
 	private GolfHole[] course;
 	private Console console;
 	private int currentHole;
@@ -34,8 +34,17 @@ public class PlayState extends GameState {
 		super(gsm);
 		course = createGolfCourse();
 		p = new OnlinePlayer(course.length, ballColor, Server.ADDRESS, Server.PORT);
-		console = new Console(p);
-		p.setConsole(console);
+		console = new Console((OnlinePlayer) p);
+		((OnlinePlayer) p).setConsole(console);
+		currentHole = 0;
+		resetHole();
+	}
+	
+	public PlayState(GameStateManager gsm, GolfHole hole) {
+		super(gsm);
+		course = new GolfHole[1];
+		course[0] = hole;
+		p = new Player(course.length, Color.WHITE);
 		currentHole = 0;
 		resetHole();
 	}
@@ -43,16 +52,20 @@ public class PlayState extends GameState {
 	public void draw(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, 400, 400);
-		console.draw(g);
+		if (console != null) console.draw(g);
 		for (int i = 0; i < course[currentHole].getObstacles().size(); i++)
 			course[currentHole].getObstacles().get(i).draw(g);
-		ArrayList<Player> players = p.getPlayers();
-		for (int i = 0; i < players.size(); i++) {
-			if (players.get(i).getCurrentHole() == currentHole)
-				players.get(i).draw(g);
+		ArrayList<Player> players = null;
+		if (p instanceof OnlinePlayer) {
+			players = ((OnlinePlayer) p).getPlayers();
+		
+			for (int i = 0; i < players.size(); i++) {
+				if (players.get(i).getCurrentHole() == currentHole)
+					players.get(i).draw(g);
+			}
 		}
 		p.draw(g);
-		if (tabPressed) {
+		if (tabPressed && p instanceof OnlinePlayer) {
 			int cellWidth = 18;
 			int width = cellWidth * (course.length + 1) + 50;
 			int height = 25 * players.size();
@@ -130,10 +143,10 @@ public class PlayState extends GameState {
 		if (k == KeyEvent.VK_TAB)
 			tabPressed = true;
 
-		if (!console.isOpen())
+		if (console == null || !console.isOpen())
 			p.keyPressed(k);
 		
-		console.keyPressed(e);
+		if (console != null) console.keyPressed(e);
 	}
 
 	public void keyReleased(KeyEvent e) {
@@ -141,9 +154,9 @@ public class PlayState extends GameState {
 		if (k == KeyEvent.VK_TAB)
 			tabPressed = false;
 
-		if (!console.isOpen())
+		if (console == null || !console.isOpen())
 			p.keyReleased(k);
-		console.keyReleased(e);
+		if (console != null) console.keyReleased(e);
 	}
 
 	private static GolfHole[] createGolfCourse() {
@@ -159,7 +172,7 @@ public class PlayState extends GameState {
 		obstacles.add(new Wall(new Vec2(100, 375), new Vec2(200, 375), 4));
 		obstacles.add(new Wall(new Vec2(200, 250), new Vec2(300, 250), 4));
 		obstacles.add(new Wall(new Vec2(200, 250), new Vec2(200, 375), 4));
-		obstacles.add(new Hole(new Vec2(250, 50), 5));
+		obstacles.add(new Hole(new Vec2(250, 50)));
 		res[0] = new GolfHole(obstacles, new Vec2(150, 350), 2);
 		obstacles = new ArrayList<Obstacle>();
 		obstacles.add(new RectGrass(new Vec2(100, 25), 200, 350));
@@ -171,7 +184,7 @@ public class PlayState extends GameState {
 		obstacles.add(new Wall(new Vec2(300, 25), new Vec2(300, 375), 4));
 		obstacles.add(new Wall(new Vec2(300, 375), new Vec2(100, 375), 4));
 		obstacles.add(new Wall(new Vec2(100, 375), new Vec2(100, 25), 4));
-		obstacles.add(new Hole(new Vec2(200, 50), 5));
+		obstacles.add(new Hole(new Vec2(200, 50)));
 		res[1] = new GolfHole(obstacles, new Vec2(200, 350), 2);
 		obstacles = new ArrayList<Obstacle>();
 		obstacles.add(new RectGrass(new Vec2(150, 25), 200, 350));
@@ -186,7 +199,7 @@ public class PlayState extends GameState {
 		obstacles.add(new Wall(new Vec2(150, 25), new Vec2(150, 275), 4));
 		obstacles.add(new Wall(new Vec2(250, 125), new Vec2(250, 375), 4));
 		obstacles.add(new Wall(new Vec2(150, 75), new Vec2(200, 25), 4));
-		obstacles.add(new Hole(new Vec2(100, 325), 5));
+		obstacles.add(new Hole(new Vec2(100, 325)));
 		res[2] = new GolfHole(obstacles, new Vec2(300, 350), 3);
 		obstacles = new ArrayList<Obstacle>();
 		obstacles.add(new RectGrass(new Vec2(25, 25), 350, 350));
@@ -209,7 +222,7 @@ public class PlayState extends GameState {
 		obstacles.add(new CircleWall(new Vec2(270, 50), 10, 0, 360, 4));
 		obstacles.add(new CircleWall(new Vec2(295, 150), 10, 0, 360, 4));
 		obstacles.add(new CircleWall(new Vec2(345, 90), 10, 0, 360, 4));
-		obstacles.add(new Hole(new Vec2(250, 280), 5));
+		obstacles.add(new Hole(new Vec2(250, 280)));
 		res[3] = new GolfHole(obstacles, new Vec2(75, 355), 4);
 		for (int i = 4; i < res.length; i++) {
 			res[i] = new GolfHole(obstacles, new Vec2(75, 355), (int) (Math.random() * 4) + 2);

@@ -12,6 +12,7 @@ import in.vvest.obstacles.RectHill;
 public class Ball implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	public static final int DEFAULT_SIZE = 4;
 	public static final int UPDATE_INTERVAL = 25;
 	
 	private Vec2 pos, vel;

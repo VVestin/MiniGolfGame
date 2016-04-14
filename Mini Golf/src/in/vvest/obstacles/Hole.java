@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import in.vvest.golf.Ball;
 import in.vvest.golf.Vec2;
 import in.vvest.leveleditor.AdjustablePoint;
+import in.vvest.leveleditor.TranslationPoint;
 
 public class Hole implements Obstacle {
+	public static final int DEFAULT_SIZE = 5;
 
 	private Vec2 pos;
 	private double radius;
@@ -16,6 +18,10 @@ public class Hole implements Obstacle {
 	public Hole(Vec2 pos, double radius) {
 		this.pos = pos;
 		this.radius = radius;
+	}
+	
+	public Hole(Vec2 pos) {
+		this(pos, DEFAULT_SIZE);
 	}
 	
 	public void draw(Graphics g) {	
@@ -42,7 +48,9 @@ public class Hole implements Obstacle {
 	}
 
 	public ArrayList<AdjustablePoint> getAdjustmentPoints() {
-		return null;
+		ArrayList<AdjustablePoint> points = new ArrayList<AdjustablePoint>();
+		points.add(new TranslationPoint());
+		return points;
 	}
     
     public ObstacleID getID() {
