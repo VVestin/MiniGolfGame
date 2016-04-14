@@ -8,18 +8,18 @@ import java.util.ArrayList;
 
 import in.vvest.game.Game;
 import in.vvest.game.GameStateManager;
-import in.vvest.golf.CircleHill;
-import in.vvest.golf.CircleWall;
 import in.vvest.golf.Console;
 import in.vvest.golf.GolfHole;
-import in.vvest.golf.Hole;
-import in.vvest.golf.Obstacle;
 import in.vvest.golf.OnlinePlayer;
 import in.vvest.golf.Player;
-import in.vvest.golf.RectGrass;
-import in.vvest.golf.RectHill;
 import in.vvest.golf.Vec2;
-import in.vvest.golf.Wall;
+import in.vvest.obstacles.CircleHill;
+import in.vvest.obstacles.CircleWall;
+import in.vvest.obstacles.Hole;
+import in.vvest.obstacles.Obstacle;
+import in.vvest.obstacles.RectGrass;
+import in.vvest.obstacles.RectHill;
+import in.vvest.obstacles.Wall;
 import in.vvest.server.Server;
 
 public class PlayState extends GameState {

@@ -1,9 +1,14 @@
-package in.vvest.golf;
+package in.vvest.obstacles;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
+
+import in.vvest.golf.Ball;
+import in.vvest.golf.Vec2;
+import in.vvest.leveleditor.AdjustablePoint;
 
 public class RectHill implements Obstacle {
 
@@ -55,8 +60,16 @@ public class RectHill implements Obstacle {
 	public Vec2 getAcc() {
 		return acc;
 	}
+
+	public ArrayList<AdjustablePoint> getAdjustmentPoints() {
+		return null;
+	}
 	
     public ObstacleID getID() {
     	return ObstacleID.RECT_HILL;
     }
+
+	public void setPos(Vec2 pos) {
+		this.pos = pos;
+	}
 }

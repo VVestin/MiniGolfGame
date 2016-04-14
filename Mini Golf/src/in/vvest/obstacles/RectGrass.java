@@ -1,7 +1,12 @@
-package in.vvest.golf;
+package in.vvest.obstacles;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
+
+import in.vvest.golf.Ball;
+import in.vvest.golf.Vec2;
+import in.vvest.leveleditor.AdjustablePoint;
 
 public class RectGrass implements Obstacle {
 
@@ -34,8 +39,16 @@ public class RectGrass implements Obstacle {
 	public double getHeight() {
 		return height;
 	}
+
+	public ArrayList<AdjustablePoint> getAdjustmentPoints() {
+		return null;
+	}
     
     public ObstacleID getID() {
     	return ObstacleID.RECT_GRASS;
     }
+
+	public void setPos(Vec2 pos) {
+		this.pos = pos;
+	}
 }

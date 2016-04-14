@@ -1,10 +1,15 @@
-package in.vvest.golf;
+package in.vvest.obstacles;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
+import java.util.ArrayList;
+
+import in.vvest.golf.Ball;
+import in.vvest.golf.Vec2;
+import in.vvest.leveleditor.AdjustablePoint;
 
 public class CircleWall implements Obstacle {
 	private Vec2 pos;
@@ -16,11 +21,12 @@ public class CircleWall implements Obstacle {
 		this.radius = radius;
 		this.start = start;
 		this.end = end;
+		thickness /= 2;
 		this.thickness = thickness;
-		this.outer = new CircleLine(pos, radius + (thickness /= 2.0), start, end, false);
+		this.outer = new CircleLine(pos, radius + (thickness), start, end, false);
 		this.inner = new CircleLine(pos, radius - thickness, start, end, false);
-		this.end1 = new CircleLine(new Vec2(-start).scale(radius).add(pos), thickness, 0.0, 6.283185307179586, true);
-		this.end2 = new CircleLine(new Vec2(-end).scale(radius).add(pos), thickness, 0.0, 6.283185307179586, true);
+		this.end1 = new CircleLine(new Vec2(-start).scale(radius).add(pos), thickness, 0.0, Math.PI * 2, true);
+		this.end2 = new CircleLine(new Vec2(-end).scale(radius).add(pos), thickness, 0.0, Math.PI * 2, true);
 	}
 
 	public void draw(Graphics g) {
@@ -64,7 +70,19 @@ public class CircleWall implements Obstacle {
 		return thickness;
 	}
 
+	public ArrayList<AdjustablePoint> getAdjustmentPoints() {
+		return null;
+	}
+
 	public ObstacleID getID() {
 		return ObstacleID.CIRCLE_WALL;
+	}
+	
+	public void setPos(Vec2 pos) {
+		this.pos = pos;
+		outer.setPos(pos);
+		inner.setPos(pos);
+		this.end1 = new CircleLine(new Vec2(-start).scale(radius).add(pos), thickness, 0, Math.PI * 2, true);
+		this.end2 = new CircleLine(new Vec2(-end).scale(radius).add(pos), thickness, 0, Math.PI * 2, true);
 	}
 }

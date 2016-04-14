@@ -1,7 +1,12 @@
-package in.vvest.golf;
+package in.vvest.obstacles;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
+
+import in.vvest.golf.Ball;
+import in.vvest.golf.Vec2;
+import in.vvest.leveleditor.AdjustablePoint;
 
 public class Line implements Obstacle {
 
@@ -38,8 +43,22 @@ public class Line implements Obstacle {
 	public Vec2 getB() {
 		return b;
 	}
+
+	public Vec2 getPos() {
+		return a;
+	}
+
+	public ArrayList<AdjustablePoint> getAdjustmentPoints() {
+		return null;
+	}
     
     public ObstacleID getID() {
     	return ObstacleID.LINE;
-    }	
+    }
+	
+	public void setPos(Vec2 pos) {
+		Vec2 diff = pos.subtract(a);
+		a = a.add(diff);
+		b = b.add(diff);
+	}
 }

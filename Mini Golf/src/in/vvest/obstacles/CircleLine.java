@@ -1,10 +1,13 @@
-package in.vvest.golf;
+package in.vvest.obstacles;
 
 import in.vvest.golf.Ball;
-import in.vvest.golf.Obstacle;
 import in.vvest.golf.Vec2;
+import in.vvest.leveleditor.AdjustablePoint;
+import in.vvest.obstacles.Obstacle;
+
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 public class CircleLine implements Obstacle {
     private Vec2 pos;
@@ -62,7 +65,15 @@ public class CircleLine implements Obstacle {
 		return filled;
 	}
 
+	public ArrayList<AdjustablePoint> getAdjustmentPoints() {
+		return null;
+	}
+
 	public ObstacleID getID() {
     	return ObstacleID.CIRCLE_LINE;
     }
+	
+	public void setPos(Vec2 pos) {
+		this.pos = pos;
+	}
 }

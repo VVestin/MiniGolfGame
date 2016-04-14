@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.vvest.game.Game;
+import in.vvest.obstacles.Obstacle;
 import in.vvest.server.Packet;
 import in.vvest.server.PacketType;
 

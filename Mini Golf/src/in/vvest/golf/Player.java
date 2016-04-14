@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
+import in.vvest.obstacles.Obstacle;
+
 public class Player {
 	
 	private Ball b;

@@ -3,17 +3,17 @@ package in.vvest.server;
 import java.awt.Color;
 import java.nio.ByteBuffer;
 
-import in.vvest.golf.CircleHill;
-import in.vvest.golf.CircleLine;
-import in.vvest.golf.CircleWall;
-import in.vvest.golf.Hole;
-import in.vvest.golf.Line;
-import in.vvest.golf.Obstacle;
-import in.vvest.golf.ObstacleID;
-import in.vvest.golf.RectGrass;
-import in.vvest.golf.RectHill;
 import in.vvest.golf.Vec2;
-import in.vvest.golf.Wall;
+import in.vvest.obstacles.CircleHill;
+import in.vvest.obstacles.CircleLine;
+import in.vvest.obstacles.CircleWall;
+import in.vvest.obstacles.Hole;
+import in.vvest.obstacles.Line;
+import in.vvest.obstacles.Obstacle;
+import in.vvest.obstacles.ObstacleID;
+import in.vvest.obstacles.RectGrass;
+import in.vvest.obstacles.RectHill;
+import in.vvest.obstacles.Wall;
 
 public class Packet {
 	public static final int MAX_SIZE = 128;
