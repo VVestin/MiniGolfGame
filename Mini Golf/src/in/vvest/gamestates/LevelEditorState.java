@@ -111,5 +111,4 @@ public class LevelEditorState extends GameState {
 			keyState.put(String.valueOf(c), false);
 		}
 	}
-	
 }
