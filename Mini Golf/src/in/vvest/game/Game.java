@@ -56,12 +56,28 @@ public class Game extends JPanel implements Runnable {
 	}
 	
 	public void paintComponent(Graphics g) {
+		double width = getSize().getWidth(), height = getSize().getHeight();
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.scale(getSize().getWidth() / 400, getSize().getHeight() / 400);
-		
 		g2d.setColor(Color.BLACK);
-		g2d.fillRect(0, 0, 400, 400);
+		g2d.fillRect(0, 0, (int) width, (int) height);
+		
+		if (width > height) {
+			g2d.translate((width - height) / 2, 0);
+		} else {
+			g2d.translate(0, (height - width) / 2);			
+		}
+		
+		g2d.scale(Math.min(width, height) / 400, Math.min(width, height) / 400);
 		gsm.draw(g);
+		
+		g2d.setColor(Color.GRAY);
+		if (width > height) {
+			g2d.fillRect((int) -width, 0, (int) width, 400);
+			g2d.fillRect(400, 0, (int) width, 400);
+		} else {
+			g2d.fillRect(0, (int) -height, 400, (int) height);
+			g2d.fillRect(0, 400, 400, (int) height);
+		}
 	}
 	
 	public void update() {
