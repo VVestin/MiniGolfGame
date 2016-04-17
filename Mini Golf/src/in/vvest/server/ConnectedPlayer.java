@@ -22,7 +22,6 @@ public class ConnectedPlayer {
 		lastUpdate = System.currentTimeMillis();
 	}
 
-
 	public void setLastUpdate(long lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
@@ -45,6 +44,10 @@ public class ConnectedPlayer {
 	}
 	
 	public void sendData(Packet packet, int delay) {
+		byte[] data = new byte[packet.getData().length];
+		for (int i = 0; i < data.length; i++) {
+			data[i] = packet.getData()[i];
+		}
 		new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -52,7 +55,6 @@ public class ConnectedPlayer {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				byte[] data = packet.getData();
 				try {
 					socket.send(new DatagramPacket(data, data.length, address, port));
 				} catch (IOException e) {

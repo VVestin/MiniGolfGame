@@ -63,7 +63,7 @@ public class MainMenuState extends GameState implements Runnable {
 						if (c.equals(Game.COLORS[i])) {
 							colorAvailable[i] = p.nextBoolean();
 							if (confirmedColor != null && confirmedColor.equals(c) && colorAvailable[i])
-									gsm.setGameState(gsm.getCurrentGameState(), new PlayState(gsm, confirmedColor));
+									gsm.setGameState(gsm.getCurrentGameState(), new PlayState(gsm, confirmedColor, socket));
 							break;
 						}
 					}

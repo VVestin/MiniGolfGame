@@ -70,7 +70,7 @@ public class Game extends JPanel implements Runnable {
 		g2d.scale(Math.min(width, height) / 400, Math.min(width, height) / 400);
 		gsm.draw(g);
 		
-		g2d.setColor(Color.GRAY);
+		g2d.setColor(Color.BLACK);
 		if (width > height) {
 			g2d.fillRect((int) -width, 0, (int) width, 400);
 			g2d.fillRect(400, 0, (int) width, 400);

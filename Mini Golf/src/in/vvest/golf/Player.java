@@ -33,9 +33,6 @@ public class Player {
 			g.drawLine((int) b.getPos().x, (int) b.getPos().y, (int) target.x, (int) target.y);
 		}
 		b.draw(g, color);
-		g.setColor(Color.WHITE);
-		g.drawString("" + (360 - angle), 5, 17);
-		g.drawString("" + power, 5, 25);
 	}
 
 	public void update(List<Obstacle> obstacles) {			
@@ -115,6 +112,7 @@ public class Player {
 	public void keyPressed(int k) {
 		if (k == KeyEvent.VK_SPACE) {
 			if (power != 0 && b.getVel().lengthSquared() == 0) {
+				b.setLastHitPos(b.getPos());
 				b.setVel(new Vec2(Math.toRadians(angle)).scale(power * power * .008));
 				strokes++;
 			}

@@ -18,12 +18,14 @@ public class Ball implements Serializable {
 	private Vec2 pos, vel;
 	private double radius;
 	private boolean inHole;
+	private Vec2 lastHitPos;
 
 	public Ball(Vec2 pos, double radius) {
 		this.pos = pos;
 		this.radius = radius;
 		vel = new Vec2(0, 0);
 		inHole = false;
+		lastHitPos = pos;
 	}
 
 	public void draw(Graphics g, Color color) {
@@ -80,6 +82,14 @@ public class Ball implements Serializable {
 
 	public double getRadius() {
 		return radius;
+	}
+
+	public Vec2 getLastHitPos() {
+		return lastHitPos;
+	}
+
+	public void setLastHitPos(Vec2 lastHitPos) {
+		this.lastHitPos = lastHitPos;
 	}
 
 }
