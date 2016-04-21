@@ -14,15 +14,12 @@ import in.vvest.leveleditor.AbstractAdjustablePoint;
 import in.vvest.leveleditor.AdjustablePoint;
 import in.vvest.leveleditor.TranslationPoint;
 
-public class CircleWall implements Obstacle {
-	private Vec2 pos;
+public class CircleWall extends AbstractCircle {
 	private CircleLine outer, inner, end1, end2;
-	private double radius, thickness;
-	private int start, end;
+	private double thickness;
 
 	public CircleWall(Vec2 pos, double radius, int start, int end, double thickness) {
-		this.pos = pos;
-		this.radius = radius;
+		super(pos, radius, start, end);
 		thickness /= 2;
 		this.thickness = thickness;
 		outer = new CircleLine(pos, radius + (thickness), start, end, false);
@@ -35,9 +32,9 @@ public class CircleWall implements Obstacle {
 		end1.draw(g);
 		end2.draw(g);
 		g.setColor(Color.BLACK);
-		Area arc = new Area(new Arc2D.Double(pos.x - outer.getRadius(), pos.y - outer.getRadius(),
+		Area arc = new Area(new Arc2D.Double(getPos().x - outer.getRadius(), getPos().y - outer.getRadius(),
 				2 * outer.getRadius(), 2 * outer.getRadius(), outer.getStart(), outer.getEnd() - outer.getStart(), 2));
-		arc.subtract(new Area(new Arc2D.Double(pos.x - inner.getRadius(), pos.y - inner.getRadius(),
+		arc.subtract(new Area(new Arc2D.Double(getPos().x - inner.getRadius(), getPos().y - inner.getRadius(),
 				2 * inner.getRadius(), 2 * inner.getRadius(), 0,
 				360, 0)));
 		((Graphics2D) g).fill(arc);
@@ -51,22 +48,6 @@ public class CircleWall implements Obstacle {
 		return true;
 	}
 
-	public Vec2 getPos() {
-		return pos;
-	}
-
-	public double getRadius() {
-		return radius;
-	}
-
-	public double getStart() {
-		return start;
-	}
-
-	public double getEnd() {
-		return end;
-	}
-
 	public double getThickness() {
 		return thickness;
 	}
@@ -77,55 +58,55 @@ public class CircleWall implements Obstacle {
 			public void update(Obstacle o, Map<String, Boolean> keyState) {
 				super.update(o, keyState);
 				if (keyState.containsKey("q") && keyState.get("q")) {
-					start += 1;
-					end += 1;
+					setStart(getStart() + 1);
+					setEnd(getEnd() + 1);
 				} else if (keyState.containsKey("e") && keyState.get("e")) {
-					start -= 1;
-					end -= 1;
+					setStart(getStart() - 1);
+					setEnd(getEnd() - 1);
 				}
 			}
 		});
 		// Adjusts start
 		points.add(new AbstractAdjustablePoint() {
 			public void update(Obstacle o, Map<String, Boolean> keyState) {
-				if (keyState.containsKey("a") && keyState.get("a") && Math.abs(start + 1 - end) <= 360) {
-					setStart(start + 1);
-				} else if (keyState.containsKey("d") && keyState.get("d") && Math.abs(start - 1 - end) <= 360) {
-					setStart(start - 1);
+				if (keyState.containsKey("a") && keyState.get("a") && Math.abs(getStart() + 1 - getEnd()) <= 360) {
+					setStart(getStart() + 1);
+				} else if (keyState.containsKey("d") && keyState.get("d") && Math.abs(getStart() - 1 - getEnd()) <= 360) {
+					setStart(getStart() - 1);
 				}
 			}
 
 			protected Vec2 getPos(Obstacle o) {
-				return new Vec2(-Math.toRadians(start)).scale(radius).add(pos);
+				return new Vec2(-Math.toRadians(getStart())).scale(getRadius()).add(o.getPos());
 			}
 		});
 		// Adjusts radius
 		points.add(new AbstractAdjustablePoint() {
 			public void update(Obstacle o, Map<String, Boolean> keyState) {
 				if (keyState.containsKey("w") && keyState.get("w")) {
-					setRadius(radius + 1);
+					setRadius(getRadius() + 1);
 				} else if (keyState.containsKey("s") && keyState.get("s")) {
-					setRadius(radius - 1);
+					setRadius(getRadius() - 1);
 				}
 			}
 
 			protected Vec2 getPos(Obstacle o) {
-				return new Vec2(Math.toRadians(-((end + start) / 2d))).scale(radius).add(pos);
+				return new Vec2(Math.toRadians(-((getEnd() + getStart()) / 2d))).scale(getRadius()).add(o.getPos());
 			}
 		});
 
 		// Adjusts end
 		points.add(new AbstractAdjustablePoint() {
 			public void update(Obstacle o, Map<String, Boolean> keyState) {
-				if (keyState.containsKey("a") && keyState.get("a") && Math.abs(end + 1 / 60 - start) <= 360) {
-					setEnd(end + 1);
-				} else if (keyState.containsKey("d") && keyState.get("d") && Math.abs(end - 1 - start) <= 360) {
-					setEnd(end - 1);
+				if (keyState.containsKey("a") && keyState.get("a") && Math.abs(getEnd() + 1 / 60 - getStart()) <= 360) {
+					setEnd(getEnd() + 1);
+				} else if (keyState.containsKey("d") && keyState.get("d") && Math.abs(getEnd() - 1 - getStart()) <= 360) {
+					setEnd(getEnd() - 1);
 				}
 			}
 
 			protected Vec2 getPos(Obstacle o) {
-				return new Vec2(-Math.toRadians(end)).scale(radius).add(pos);
+				return new Vec2(-Math.toRadians(getEnd())).scale(getRadius()).add(o.getPos());
 			}
 		});
 
@@ -137,32 +118,32 @@ public class CircleWall implements Obstacle {
 	}
 
 	public void setPos(Vec2 pos) {
-		this.pos = pos;
+		super.setPos(pos);
 		outer.setPos(pos);
 		inner.setPos(pos);
-		setStart(start);
-		setEnd(end);
+		setStart(getStart());
+		setEnd(getEnd());
 	}
 	
 	public void setRadius(double radius) {
-		this.radius = radius;
+		super.setRadius(radius);
 		inner.setRadius(radius - thickness);
 		outer.setRadius(radius + thickness);
-		setStart(start);
-		setEnd(end);		
+		setStart(getStart());
+		setEnd(getEnd());		
 	}
 
 	public void setStart(int start) {
-		this.start = start;
+		super.setStart(start);
 		outer.setStart(start);
 		inner.setStart(start);
-		end1 = new CircleLine(new Vec2(-Math.toRadians(start)).scale(radius).add(pos), thickness, 0, 360, true);
+		end1 = new CircleLine(new Vec2(-Math.toRadians(start)).scale(getRadius()).add(getPos()), thickness, 0, 360, true);
 	}
 
 	public void setEnd(int end) {
-		this.end = end;
+		super.setEnd(end);
 		outer.setEnd(end);
 		inner.setEnd(end);
-		end2 = new CircleLine(new Vec2(-Math.toRadians(end)).scale(radius).add(pos), thickness, 0, 360, true);
+		end2 = new CircleLine(new Vec2(-Math.toRadians(end)).scale(getRadius()).add(getPos()), thickness, 0, 360, true);
 	}
 }
