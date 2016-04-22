@@ -3,17 +3,17 @@ package in.vvest.server;
 import java.awt.Color;
 import java.nio.ByteBuffer;
 
-import in.vvest.golf.CircleHill;
-import in.vvest.golf.CircleLine;
-import in.vvest.golf.CircleWall;
-import in.vvest.golf.Hole;
-import in.vvest.golf.Line;
-import in.vvest.golf.Obstacle;
-import in.vvest.golf.ObstacleID;
-import in.vvest.golf.RectGrass;
-import in.vvest.golf.RectHill;
 import in.vvest.golf.Vec2;
-import in.vvest.golf.Wall;
+import in.vvest.obstacles.CircleHill;
+import in.vvest.obstacles.CircleLine;
+import in.vvest.obstacles.CircleWall;
+import in.vvest.obstacles.Hole;
+import in.vvest.obstacles.Line;
+import in.vvest.obstacles.Obstacle;
+import in.vvest.obstacles.ObstacleID;
+import in.vvest.obstacles.RectGrass;
+import in.vvest.obstacles.RectHill;
+import in.vvest.obstacles.Wall;
 
 public class Packet {
 	public static final int MAX_SIZE = 128;
@@ -103,24 +103,24 @@ public class Packet {
 			addDouble(ch.getPos().x);
 			addDouble(ch.getPos().y);
 			addDouble(ch.getRadius());
-			addDouble(ch.getStart());
-			addDouble(ch.getEnd());
-			addDouble(ch.getAcc());			
+			addDouble((double) ch.getStart());
+			addDouble((double) ch.getEnd());
+			addDouble((double) ch.getAcc());			
 		} else if (o.getID() == ObstacleID.CIRCLE_LINE) {
 			CircleLine cl = (CircleLine) o;
 			addDouble(cl.getPos().x);
 			addDouble(cl.getPos().y);
 			addDouble(cl.getRadius());
-			addDouble(cl.getStart());
-			addDouble(cl.getEnd());
+			addDouble((double) cl.getStart());
+			addDouble((double) cl.getEnd());
 			addBoolean(cl.isFilled());
 		} else if (o.getID() == ObstacleID.CIRCLE_WALL) {
 			CircleWall cw = (CircleWall) o;
 			addDouble(cw.getPos().x);
 			addDouble(cw.getPos().y);
 			addDouble(cw.getRadius());
-			addDouble(cw.getStart());
-			addDouble(cw.getEnd());
+			addDouble((double) cw.getStart());
+			addDouble((double) cw.getEnd());
 			addDouble(cw.getThickness());
 		} else if (o.getID() == ObstacleID.HOLE) {
 			Hole h = (Hole) o;
@@ -225,11 +225,11 @@ public class Packet {
 	public Obstacle nextObstacle() {
 		byte id = nextByte();
 		if (id == ObstacleID.CIRCLE_HILL.getID()) {
-			return new CircleHill(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), nextDouble(), nextDouble());	
+			return new CircleHill(new Vec2(nextDouble(), nextDouble()), nextDouble(), (int) nextDouble(), (int) nextDouble(), nextDouble());	
 		} else if (id == ObstacleID.CIRCLE_LINE.getID()) {
-			return new CircleLine(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), nextDouble(), nextBoolean());
+			return new CircleLine(new Vec2(nextDouble(), nextDouble()), nextDouble(), (int) nextDouble(), (int) nextDouble(), nextBoolean());
 		} else if (id == ObstacleID.CIRCLE_WALL.getID()) {
-			return new CircleWall(new Vec2(nextDouble(), nextDouble()), nextDouble(), nextDouble(), nextDouble(), nextDouble());
+			return new CircleWall(new Vec2(nextDouble(), nextDouble()), nextDouble(), (int) nextDouble(), (int) nextDouble(), nextDouble());
 		} else if (id == ObstacleID.HOLE.getID()) {
 			return new Hole(new Vec2(nextDouble(), nextDouble()), nextDouble());
 		} else if (id == ObstacleID.LINE.getID()) {

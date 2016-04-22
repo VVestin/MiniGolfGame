@@ -1,9 +1,16 @@
-package in.vvest.golf;
+package in.vvest.obstacles;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
+
+import in.vvest.golf.Ball;
+import in.vvest.golf.Vec2;
+import in.vvest.leveleditor.AdjustablePoint;
+import in.vvest.leveleditor.TranslationPoint;
 
 public class Hole implements Obstacle {
+	public static final int DEFAULT_SIZE = 5;
 
 	private Vec2 pos;
 	private double radius;
@@ -11,6 +18,10 @@ public class Hole implements Obstacle {
 	public Hole(Vec2 pos, double radius) {
 		this.pos = pos;
 		this.radius = radius;
+	}
+	
+	public Hole(Vec2 pos) {
+		this(pos, DEFAULT_SIZE);
 	}
 	
 	public void draw(Graphics g) {	
@@ -35,8 +46,18 @@ public class Hole implements Obstacle {
 	public double getRadius() {
 		return radius;
 	}
+
+	public ArrayList<AdjustablePoint> getAdjustmentPoints() {
+		ArrayList<AdjustablePoint> points = new ArrayList<AdjustablePoint>();
+		points.add(new TranslationPoint());
+		return points;
+	}
     
     public ObstacleID getID() {
     	return ObstacleID.HOLE;
-    }	
+    }
+	
+	public void setPos(Vec2 pos) {
+		this.pos = pos;
+	}
 }

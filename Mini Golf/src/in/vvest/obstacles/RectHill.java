@@ -1,29 +1,29 @@
-package in.vvest.golf;
+package in.vvest.obstacles;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-public class RectHill implements Obstacle {
+import in.vvest.golf.Ball;
+import in.vvest.golf.Vec2;
 
-	private Vec2 pos, acc;
-	private double width, height;
+public class RectHill extends AbstractRect {
 
+	private Vec2 acc;
+	
 	public RectHill(Vec2 pos, double width, double height, Vec2 acc) {
-		this.pos = pos;
-		this.width = width;
-		this.height = height;
+		super(pos, width, height);
 		this.acc = acc;
 	}
 
 	public void draw(Graphics g) {
 		g.setColor(Color.GREEN.darker());
-		g.fillRect((int) (pos.x), (int) (pos.y), (int) width, (int) height);
+		g.fillRect((int) (getPos().x), (int) (getPos().y), (int) getWidth(), (int) getHeight());
 		g.setColor(Color.GREEN);
 		Graphics2D g2d = (Graphics2D) g;
 		AffineTransform old = g2d.getTransform();
-		g2d.translate(pos.x + width / 2, pos.y + height / 2);
+		g2d.translate(getPos().x + getWidth() / 2, getPos().y + getHeight() / 2);
 		g2d.rotate(Math.PI / 2 - acc.angle());
 		int[] xPoints = {0, -5, 5};
 		int[] yPoints = {10, -5, -5};
@@ -32,24 +32,12 @@ public class RectHill implements Obstacle {
 	}
 
 	public boolean resolveCollision(Ball b) {
-		if (b.getPos().x > pos.x && b.getPos().x < pos.x + width
-				&& b.getPos().y > pos.y && b.getPos().y < pos.y + height) {
+		if (b.getPos().x > getPos().x && b.getPos().x < getPos().x + getWidth()
+				&& b.getPos().y > getPos().y && b.getPos().y < getPos().y + getHeight()) {
 			b.setVel(b.getVel().add(acc.scale(1d / Ball.UPDATE_INTERVAL)));
 			return true;
 		}
 		return false;
-	}
-
-	public Vec2 getPos() {
-		return pos;
-	}
-	
-	public double getWidth() {
-		return width;
-	}
-	
-	public double getHeight() {
-		return height;
 	}
 	
 	public Vec2 getAcc() {

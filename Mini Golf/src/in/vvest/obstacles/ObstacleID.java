@@ -1,4 +1,4 @@
-package in.vvest.golf;
+package in.vvest.obstacles;
 
 public enum ObstacleID {
 	

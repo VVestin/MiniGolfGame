@@ -2,6 +2,8 @@ package in.vvest.golf;
 
 import java.util.ArrayList;
 
+import in.vvest.obstacles.Obstacle;
+
 public class GolfHole {
 
 	private ArrayList<Obstacle> obstacles;

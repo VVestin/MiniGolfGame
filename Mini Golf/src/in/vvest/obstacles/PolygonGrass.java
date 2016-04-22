@@ -1,11 +1,14 @@
-package in.vvest.golf;
+package in.vvest.obstacles;
 
 import in.vvest.golf.Ball;
-import in.vvest.golf.Obstacle;
 import in.vvest.golf.Vec2;
+import in.vvest.leveleditor.AdjustablePoint;
+import in.vvest.obstacles.Obstacle;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Polygon;
+import java.util.ArrayList;
 
 public class PolygonGrass implements Obstacle {
 	
@@ -30,8 +33,20 @@ public class PolygonGrass implements Obstacle {
     public boolean resolveCollision(Ball b) {
         return false;
     }
+
+	public ArrayList<AdjustablePoint> getAdjustmentPoints() {
+		return null;
+	}
     
     public ObstacleID getID() {
     	return null;
     }
+
+	public Vec2 getPos() {
+		return null;
+	}
+	
+	public void setPos(Vec2 pos) {
+		
+	}
 }

@@ -5,20 +5,27 @@ import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.List;
 
+import in.vvest.obstacles.CircleHill;
+import in.vvest.obstacles.Obstacle;
+import in.vvest.obstacles.RectHill;
+
 public class Ball implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	public static final int DEFAULT_SIZE = 4;
 	public static final int UPDATE_INTERVAL = 25;
 	
 	private Vec2 pos, vel;
 	private double radius;
 	private boolean inHole;
+	private Vec2 lastHitPos;
 
 	public Ball(Vec2 pos, double radius) {
 		this.pos = pos;
 		this.radius = radius;
 		vel = new Vec2(0, 0);
 		inHole = false;
+		lastHitPos = pos;
 	}
 
 	public void draw(Graphics g, Color color) {
@@ -75,6 +82,14 @@ public class Ball implements Serializable {
 
 	public double getRadius() {
 		return radius;
+	}
+
+	public Vec2 getLastHitPos() {
+		return lastHitPos;
+	}
+
+	public void setLastHitPos(Vec2 lastHitPos) {
+		this.lastHitPos = lastHitPos;
 	}
 
 }

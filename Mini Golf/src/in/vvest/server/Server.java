@@ -10,6 +10,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.vvest.game.Game;
+
 public class Server extends Thread {
 
 	public static final int PORT = 9091;
@@ -58,6 +60,7 @@ public class Server extends Thread {
 								clients.get(i).sendData(p);
 								clients.remove(i);
 							} else {
+								System.out.println("Telling " + Game.colorString(clients.get(i).getColor()));
 								clients.get(i).sendData(p, 500);
 							}
 						}
@@ -94,8 +97,9 @@ public class Server extends Thread {
 							Packet packet = PacketType.DISCONNECT.createPacket();
 							packet.addColor(clients.get(i).getColor());
 							packet.addByte((byte) (clients.size() - 1)); 
-							for (int j = 0; j < clients.size(); j++)
-								clients.get(i).sendData(packet);
+							for (int j = 0; j < clients.size(); j++) {
+								clients.get(j).sendData(packet);
+							}
 							clients.remove(i);
 						}
 					}
@@ -137,8 +141,8 @@ public class Server extends Thread {
 	public static void main(String[] args) throws Exception {
 		Server s = new Server();
 		s.start();
-		Client c = new Client();
-		c.sendData(PacketType.PING.createPacket(), Server.ADDRESS, Server.PORT);
+		//Client c = new Client();
+		//c.sendData(PacketType.PING.createPacket(), Server.ADDRESS, Server.PORT);
 	}
 
 }
