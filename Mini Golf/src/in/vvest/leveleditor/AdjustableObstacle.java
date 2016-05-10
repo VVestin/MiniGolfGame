@@ -48,7 +48,11 @@ public class AdjustableObstacle {
 		}
 	}
 	
+	public MenuBar getMenuBar() {
+		return null;	
+	}
+	
 	public Obstacle getObstacle() {
 		return obstacle;
-	}	
+	}
 }

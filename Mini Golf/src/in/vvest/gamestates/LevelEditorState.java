@@ -10,6 +10,8 @@ import in.vvest.game.GameStateManager;
 import in.vvest.golf.GolfHole;
 import in.vvest.golf.Vec2;
 import in.vvest.leveleditor.AdjustableObstacle;
+import in.vvest.leveleditor.MenuBar;
+import in.vvest.leveleditor.MenuBarLabel;
 import in.vvest.obstacles.CircleHill;
 import in.vvest.obstacles.CircleWall;
 import in.vvest.obstacles.Hole;
@@ -17,16 +19,21 @@ import in.vvest.obstacles.Obstacle;
 import in.vvest.obstacles.RectGrass;
 
 public class LevelEditorState extends GameState {
-
 	private ArrayList<Obstacle> obstacles;
 	private Map<String, Boolean> keyState;
 	private AdjustableObstacle currentObstacle;
+	private MenuBar menuBar;
 	
 	public LevelEditorState(GameStateManager gsm) {
 		super(gsm);
 		obstacles = new ArrayList<Obstacle>();
 		keyState = new HashMap<String, Boolean>();
-		currentObstacle = new AdjustableObstacle(new RectGrass(new Vec2(50, 50), 300, 300));
+		currentObstacle = null;
+		menuBar = new MenuBar(0);
+		menuBar.addItem(new MenuBarLabel("1 - CircleHill"));
+		menuBar.addItem(new MenuBarLabel("2 - CircleWall"));
+		menuBar.addItem(new MenuBarLabel("3 - RectGrass"));
+		menuBar.addItem(new MenuBarLabel("4 - Hole"));
 	}
 
 	public void draw(Graphics g) {
@@ -35,6 +42,8 @@ public class LevelEditorState extends GameState {
 		}
 		if (currentObstacle != null)
 			currentObstacle.draw(g);
+		else
+			menuBar.draw(g);
 	}
 
 	public void update() {

@@ -13,7 +13,7 @@ public class RectWater extends AbstractRect {
 	}
 
 	public void draw(Graphics g) {
-		g.setColor(Color.BLUE.brighter());
+		g.setColor(new Color(102, 204, 255));
 		g.fillRect((int) getPos().x, (int) getPos().y, (int) getWidth(), (int) getHeight());
 	}
 
