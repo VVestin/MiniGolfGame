@@ -11,8 +11,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 
 import in.vvest.game.Game;
-import in.vvest.game.GameStateManager;
-import in.vvest.server.Packet;
+import in.vvest.packet.IncomingPacket;
+import in.vvest.packet.OutgoingPacket;
 import in.vvest.server.PacketType;
 import in.vvest.server.Server;
 
@@ -26,8 +26,8 @@ public class MainMenuState extends GameState implements Runnable {
 	private int port;
 	private long lastAvailabilityCheck;
 
-	public MainMenuState(GameStateManager gsm) {
-		super(gsm);
+	public MainMenuState() {
+		super();
 		address = Server.ADDRESS;
 		port = Server.PORT;
 		try {
@@ -42,7 +42,7 @@ public class MainMenuState extends GameState implements Runnable {
 	public void update() {
 		if (System.currentTimeMillis() - lastAvailabilityCheck > 100) {
 			for (int i = 0; i < Game.COLORS.length; i++) {
-				Packet p = PacketType.COLOR_IN_USE.createPacket();
+				OutgoingPacket p = new OutgoingPacket(PacketType.COLOR_IN_USE);
 				p.addColor(Game.COLORS[i]);
 				sendData(p);
 			}
@@ -56,14 +56,14 @@ public class MainMenuState extends GameState implements Runnable {
 				byte[] data = new byte[5];
 				DatagramPacket dataPacket = new DatagramPacket(data, data.length);
 				socket.receive(dataPacket);
-				Packet p = new Packet(data);
+				IncomingPacket p = new IncomingPacket(data);
 				if (p.getType() == PacketType.COLOR_IN_USE) {
 					Color c = p.nextColor();
 					for (int i = 0; i < Game.COLORS.length; i++) {
 						if (c.equals(Game.COLORS[i])) {
 							colorAvailable[i] = p.nextBoolean();
 							if (confirmedColor != null && confirmedColor.equals(c) && colorAvailable[i])
-									gsm.setGameState(gsm.getCurrentGameState(), new PlayState(gsm, confirmedColor, socket));
+									setGameState(new PlayState(confirmedColor, socket));
 							break;
 						}
 					}
@@ -102,7 +102,7 @@ public class MainMenuState extends GameState implements Runnable {
 		int k = e.getKeyCode();
 		if (k == KeyEvent.VK_ENTER || k == KeyEvent.VK_SPACE && confirmedColor == null) {
 			confirmedColor = Game.COLORS[selectedColor];
-			Packet packet = PacketType.COLOR_IN_USE.createPacket();
+			OutgoingPacket packet = new OutgoingPacket(PacketType.COLOR_IN_USE);
 			packet.addColor(confirmedColor);
 			sendData(packet);
 		}
@@ -112,7 +112,7 @@ public class MainMenuState extends GameState implements Runnable {
 			selectedColor++;
 	}
 
-	private void sendData(Packet packet) {
+	private void sendData(OutgoingPacket packet) {
 		byte[] data = packet.getData();
 		try {
 			socket.send(new DatagramPacket(data, data.length, address, port));

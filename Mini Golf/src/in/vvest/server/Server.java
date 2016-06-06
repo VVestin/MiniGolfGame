@@ -10,7 +10,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.vvest.game.Game;
+import in.vvest.packet.IncomingPacket;
+import in.vvest.packet.OutgoingPacket;
+import in.vvest.packet.Packet;
 
 public class Server extends Thread {
 
@@ -38,72 +40,19 @@ public class Server extends Thread {
 				byte[] data = new byte[Packet.MAX_SIZE];
 				DatagramPacket dataPacket = new DatagramPacket(data, data.length);
 				socket.receive(dataPacket);
-				Packet p = new Packet(data);
-				if (p.getType() == PacketType.PING) {
+				IncomingPacket incomingPacket = new IncomingPacket(data);
+				if (incomingPacket.getType() == PacketType.PING) {
 					System.out.println("Ping!");
-					sendData(PacketType.PONG.createPacket(), dataPacket.getAddress(), dataPacket.getPort());
-				} else if (p.getType() == PacketType.CONNECT) {
-					Color c = p.nextColor();
-					if (!isConnected(c)) {
-						System.out.println("Connection!");
-						clients.add(new ConnectedPlayer(dataPacket.getAddress(), dataPacket.getPort(), socket, c));
-						for (int i = 0; i < clients.size(); i++) {
-							clients.get(i).sendData(p);
-						}
-					}
-				} else if (p.getType() == PacketType.DISCONNECT) {
-					Color c = p.nextColor();
-					if (isConnected(c)) {				
-						System.out.println("Disconnection!");
-						for (int i = clients.size() - 1; i >= 0; i--) {
-							if (clients.get(i).getColor().equals(c)) {
-								clients.get(i).sendData(p);
-								clients.remove(i);
-							} else {
-								System.out.println("Telling " + Game.colorString(clients.get(i).getColor()));
-								clients.get(i).sendData(p, 500);
-							}
-						}
-					}
-				} else if (p.getType() == PacketType.MESSAGE) {
-					Color c = p.nextColor();
-					if (isConnected(c)) {
-						for (int i = 0; i < clients.size(); i++) {
-							clients.get(i).sendData(p);
-						}
-					}
-				} else if (p.getType() == PacketType.COLOR_IN_USE) {
-					Color c = p.nextColor();
-					Packet packet = PacketType.COLOR_IN_USE.createPacket();
-					packet.addColor(c);
-					packet.addBoolean(!isConnected(c));
+					sendData(new OutgoingPacket(PacketType.PONG), dataPacket.getAddress(), dataPacket.getPort());
+				} else if (incomingPacket.getType() == PacketType.PONG) {
+					System.out.println("Pong!");
+				} else if (incomingPacket.getType() == PacketType.COLOR_IN_USE) {
+					Color playerColor = incomingPacket.nextColor();
+					OutgoingPacket packet = new OutgoingPacket(PacketType.COLOR_IN_USE);
+					packet.addColor(playerColor);
+					boolean available = isConnected(playerColor);
+					packet.addBoolean(available);
 					sendData(packet, dataPacket.getAddress(), dataPacket.getPort());
-				} else if (p.getType() == PacketType.UPDATE) {
-					Color c = p.nextColor();
-					if (isConnected(c)) {
-						for (int i = 0; i < clients.size(); i++) {
-							if (clients.get(i).getColor().equals(c))
-								clients.get(i).setLastUpdate(System.currentTimeMillis());
-							else 								
-								clients.get(i).sendData(p);
-						}					
-					}
-				}
-
-				if (System.currentTimeMillis() - lastOfflineCheck > 10_000) {	
-					for (int i = clients.size() - 1; i >= 0; i--) {
-						if (System.currentTimeMillis() - clients.get(i).getLastUpdate() > 5_000) {				
-							System.out.println("Disconnection!");
-							Packet packet = PacketType.DISCONNECT.createPacket();
-							packet.addColor(clients.get(i).getColor());
-							packet.addByte((byte) (clients.size() - 1)); 
-							for (int j = 0; j < clients.size(); j++) {
-								clients.get(j).sendData(packet);
-							}
-							clients.remove(i);
-						}
-					}
-					lastOfflineCheck = System.currentTimeMillis();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -120,7 +69,7 @@ public class Server extends Thread {
 		return false;
 	}
 	
-	private void sendData(Packet packet, InetAddress address, int port) {
+	private void sendData(OutgoingPacket packet, InetAddress address, int port) {
 		byte[] data = packet.getData();
 		try {
 			socket.send(new DatagramPacket(data, data.length, address, port));
@@ -141,8 +90,6 @@ public class Server extends Thread {
 	public static void main(String[] args) throws Exception {
 		Server s = new Server();
 		s.start();
-		//Client c = new Client();
-		//c.sendData(PacketType.PING.createPacket(), Server.ADDRESS, Server.PORT);
 	}
 
 }

@@ -8,7 +8,6 @@ import java.net.DatagramSocket;
 import java.util.ArrayList;
 
 import in.vvest.game.Game;
-import in.vvest.game.GameStateManager;
 import in.vvest.golf.Console;
 import in.vvest.golf.GolfHole;
 import in.vvest.golf.OnlinePlayer;
@@ -30,8 +29,8 @@ public class PlayState extends GameState {
 	private int currentHole;
 	private boolean tabPressed;
 
-	public PlayState(GameStateManager gsm, Color ballColor, DatagramSocket socket) {
-		super(gsm);
+	public PlayState(Color ballColor, DatagramSocket socket) {
+		super();
 		course = createGolfCourse();
 		p = new OnlinePlayer(course.length, ballColor, Server.ADDRESS, Server.PORT, socket);
 		console = new Console((OnlinePlayer) p);
@@ -40,8 +39,8 @@ public class PlayState extends GameState {
 		resetHole();
 	}
 	
-	public PlayState(GameStateManager gsm, GolfHole hole) {
-		super(gsm);
+	public PlayState(GolfHole hole) {
+		super();
 		course = new GolfHole[1];
 		course[0] = hole;
 		p = new Player(course.length, Color.WHITE);

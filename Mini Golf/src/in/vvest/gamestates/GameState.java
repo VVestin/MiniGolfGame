@@ -4,14 +4,20 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import in.vvest.game.GameStateManager;
-
 public abstract class GameState {
 
-	protected GameStateManager gsm;
+	private GameState gameState;
+	
+	public GameState() {
+		gameState = this;
+	}
+	
+	protected void setGameState(GameState gameState) {
+		this.gameState = gameState;
+	}
 
-	public GameState(GameStateManager gsm) {
-		this.gsm = gsm;
+	public GameState getGameState() {
+		return gameState;
 	}
 
 	public abstract void draw(Graphics g);
@@ -37,5 +43,5 @@ public abstract class GameState {
 	public void mouseDragged(MouseEvent e) {}
 
 	public void mouseMoved(MouseEvent e) {}
-
+	
 }

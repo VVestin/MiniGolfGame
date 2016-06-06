@@ -10,8 +10,6 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 import in.vvest.game.Game;
-import in.vvest.server.Packet;
-import in.vvest.server.PacketType;
 
 public class Console {
 
@@ -124,23 +122,7 @@ public class Console {
 			currentEntry = "";
 			t = true;
 		} else if (k == KeyEvent.VK_ENTER && open && currentEntry.length() > 0) {
-			if (currentEntry.startsWith("/")) {
-				if (currentEntry.substring(1).equalsIgnoreCase("ping")) {
-					player.sendData(PacketType.PING.createPacket());
-				} else if (currentEntry.startsWith("/kick ")) {
-					Color c = Game.stringColor(currentEntry.substring(6));
-					if (c != null) {
-						Packet p = PacketType.DISCONNECT.createPacket();
-						p.addColor(c);
-						player.sendData(p);
-					}
-				}
-			} else {
-				Packet packet = PacketType.MESSAGE.createPacket();
-				packet.addColor(player.getColor());
-				packet.addString(currentEntry);
-				player.sendData(packet);
-			}
+			player.processChat(currentEntry);
 			lastEntry = currentEntry;
 			currentEntry = "";
 		} else if (k == KeyEvent.VK_ESCAPE && open) {

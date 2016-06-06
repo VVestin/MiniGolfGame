@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import in.vvest.game.GameStateManager;
 import in.vvest.golf.GolfHole;
 import in.vvest.golf.Vec2;
 import in.vvest.leveleditor.AdjustableObstacle;
@@ -24,8 +23,8 @@ public class LevelEditorState extends GameState {
 	private AdjustableObstacle currentObstacle;
 	private MenuBar menuBar;
 	
-	public LevelEditorState(GameStateManager gsm) {
-		super(gsm);
+	public LevelEditorState() {
+		super();
 		obstacles = new ArrayList<Obstacle>();
 		keyState = new HashMap<String, Boolean>();
 		currentObstacle = null;
@@ -53,7 +52,7 @@ public class LevelEditorState extends GameState {
 			obstacles.add(currentObstacle.getObstacle());
 			currentObstacle = null;
 		} else if (isKeyDown("p")) {
-			gsm.setGameState(gsm.getCurrentGameState(), new PlayState(gsm, new GolfHole(obstacles, new Vec2(350, 350), 2)));
+			setGameState(new PlayState(new GolfHole(obstacles, new Vec2(350, 350), 2)));
 		} else if (currentObstacle == null) {
 			if (isKeyDown("1")) {
 				currentObstacle = new AdjustableObstacle(new CircleHill(new Vec2(200, 200), 50, 0, 180, 0));

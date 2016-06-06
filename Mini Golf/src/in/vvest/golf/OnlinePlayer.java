@@ -10,7 +10,9 @@ import java.util.List;
 
 import in.vvest.game.Game;
 import in.vvest.obstacles.Obstacle;
-import in.vvest.server.Packet;
+import in.vvest.packet.IncomingPacket;
+import in.vvest.packet.OutgoingPacket;
+import in.vvest.packet.Packet;
 import in.vvest.server.PacketType;
 
 public class OnlinePlayer extends Player implements Runnable {
@@ -21,6 +23,7 @@ public class OnlinePlayer extends Player implements Runnable {
 	private Console console;
 	private ArrayList<Player> players;
 	private int count;
+	private boolean connected;
 
 	public OnlinePlayer(int numHoles, Color color, InetAddress serverAddress, int serverPort, DatagramSocket socket) {
 		super(numHoles, color);
@@ -29,9 +32,6 @@ public class OnlinePlayer extends Player implements Runnable {
 		this.serverAddress = serverAddress;
 		this.serverPort = serverPort;
 		new Thread(this).start();
-		Packet packet = PacketType.CONNECT.createPacket();
-		packet.addColor(color);
-		sendData(packet);
 	}
 
 	public void run() {
@@ -41,61 +41,15 @@ public class OnlinePlayer extends Player implements Runnable {
 				byte[] data = new byte[Packet.MAX_SIZE];
 				DatagramPacket dataPacket = new DatagramPacket(data, data.length);
 				socket.receive(dataPacket);
-				Packet p = new Packet(data);
-				// TODO make code more robust for errors the server could have
-				if (p.getType() == PacketType.PONG) {
-					console.write("SRVR", "PONG");
-				} else if (p.getType() == PacketType.CONNECT) {
-					Color c = p.nextColor();
-					if (!c.equals(getColor()))
-						players.add(new Player(getScoreCard().length, c));
-					console.write("SRV", Game.colorString(c) + " has connected");
-				} else if (p.getType() == PacketType.DISCONNECT) {
-					Color c = p.nextColor();
-					if (c.equals(getColor())) {
-						System.exit(0);
-					}
-					for (int i = 0; i < players.size(); i++) {
-						if (players.get(i).getColor().equals(c)) {
-							players.remove(i);
-							break;
-						}
-					}
-					console.write("SRV", Game.colorString(c) + " has disconnected");
-				} else if (p.getType() == PacketType.MESSAGE) {
-					Color sender = p.nextColor();
-					String msg = p.nextString();
-					console.write(Game.colorString(sender), msg);
-				} else if (p.getType() == PacketType.UPDATE) {
-					Color c = p.nextColor();
-					if (!c.equals(getColor())) {
-						Player player = null;
-						for (int i = 0; i < players.size(); i++) {
-							if (players.get(i).getColor().equals(c)) {
-								player = players.get(i);
-								break;
-							}
-						}
-						if (player == null) {
-							player = new Player(getScoreCard().length, c);
-							players.add(player);
-						}
-						player.setCurrentHole(p.nextByte());
-						double x = p.nextDouble();
-						double y = p.nextDouble();
-						double velX = p.nextDouble();
-						double velY = p.nextDouble();
-						int angle = (int) p.nextDouble();
-						double power = p.nextDouble();
-						player.getBall().setPos(new Vec2(x, y));
-						player.getBall().setVel(new Vec2(velX, velY));
-						player.setAngle(angle);
-						player.setPower(power);
-						int[] scoreCard = new int[player.getScoreCard().length];
-						for (int i = 0; i < scoreCard.length; i++) {
-							scoreCard[i] = p.nextByte();
-						}
-						player.setScoreCard(scoreCard);
+				IncomingPacket p = new IncomingPacket(data);
+				if (p.getType() == PacketType.CONNECT_ACK) {
+					Color playerColor = p.nextColor();
+					console.write(Game.colorString(playerColor), " has Connected");
+					if (playerColor.equals(getColor()))
+						connected = true;
+				} else if (p.getType() == PacketType.PLAYER_LISTING) {
+					for (int i = 0; i < Game.COLORS.length; i++) {
+						
 					}
 				}
 			} catch (IOException e) {
@@ -107,7 +61,7 @@ public class OnlinePlayer extends Player implements Runnable {
 	public void update(List<Obstacle> obstacles) {
 		super.update(obstacles);
 		if (count % 3 == 0) {
-			Packet packet = PacketType.UPDATE.createPacket();
+			OutgoingPacket packet = new OutgoingPacket(PacketType.UPDATE);			
 			packet.addColor(getColor());
 			packet.addByte((byte) getCurrentHole());
 			packet.addDouble(getBall().getPos().x);
@@ -121,6 +75,12 @@ public class OnlinePlayer extends Player implements Runnable {
 				packet.addByte((byte) scoreCard[i]);
 			}
 			sendData(packet);
+			
+			if (!connected) {
+				OutgoingPacket connectPacket = new OutgoingPacket(PacketType.CONNECT);
+				connectPacket.addColor(getColor());
+				sendData(connectPacket);
+			}
 		}
 		count++;
 	}
@@ -134,12 +94,32 @@ public class OnlinePlayer extends Player implements Runnable {
 	}
 
 	public void dispose() {
-		Packet p = PacketType.DISCONNECT.createPacket();
+		OutgoingPacket p = new OutgoingPacket(PacketType.DISCONNECT);
 		p.addColor(getColor());
 		sendData(p);
 	}
+	
+	public void processChat(String message) {
+		if (message.startsWith("/")) {
+			if (message.substring(1).equalsIgnoreCase("ping")) {
+				sendData(new OutgoingPacket(PacketType.PING));
+			} else if (message.startsWith("/kick ")) {
+				Color c = Game.stringColor(message.substring(6));
+				if (c != null) {
+					OutgoingPacket p = new OutgoingPacket(PacketType.DISCONNECT);
+					p.addColor(c);
+					sendData(p);
+				}
+			}
+		} else {
+			OutgoingPacket packet = new OutgoingPacket(PacketType.MESSAGE);
+			packet.addColor(getColor());
+			packet.addString(message);
+			sendData(packet);
+		}
+	}
 
-	public void sendData(Packet packet) {
+	public void sendData(OutgoingPacket packet) {
 		byte[] data = packet.getData();
 		try {
 			socket.send(new DatagramPacket(data, data.length, serverAddress, serverPort));
