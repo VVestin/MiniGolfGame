@@ -16,16 +16,16 @@ public enum PacketType {
 	// 1 - packetID; 
 	PING(0, 1),
 	
-	 // 1 - packetID;
+	// 1 - packetID;
 	PONG(1, 1),
 	
-	 // 1 - packetID; 3 - Color;
+	// 1 - packetID; 3 - Color;
 	CONNECT(2, 5),
 	
-	 // 1 - packetID; 3 - Color;
-	CONNECT_ACK(3, 5),
+	// 1 - packetID; 3 - Color;
+	//CONNECT_ACK(3, 5),
 	
-	 // 1 - packetID; 3 - Color;
+	// 1 - packetID; 3 - Color;
 	DISCONNECT(4, 5),
 	
 	// 1 - packetID; 3 - Color; MAX_MESSAGE_LENGTH - Message

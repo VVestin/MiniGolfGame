@@ -21,7 +21,6 @@ public class Server extends Thread {
 
 	private DatagramSocket socket;
 	private List<ConnectedPlayer> clients;
-	private long lastOfflineCheck;
 
 	public Server() {
 		try {
@@ -50,9 +49,18 @@ public class Server extends Thread {
 					Color playerColor = incomingPacket.nextColor();
 					OutgoingPacket packet = new OutgoingPacket(PacketType.COLOR_IN_USE);
 					packet.addColor(playerColor);
-					boolean available = isConnected(playerColor);
-					packet.addBoolean(available);
+					boolean inUse = isConnected(playerColor);
+					packet.addBoolean(inUse);
 					sendData(packet, dataPacket.getAddress(), dataPacket.getPort());
+				} else if (incomingPacket.getType() == PacketType.CONNECT) {
+					Color playerColor = incomingPacket.nextColor();
+					if (!clients.contains(playerColor)) {
+						clients.add(new ConnectedPlayer(dataPacket.getAddress(), dataPacket.getPort(), socket, playerColor));
+					}
+					OutgoingPacket packet = new OutgoingPacket(PacketType.CONNECT);
+					packet.addColor(playerColor);
+					for (ConnectedPlayer client : clients)
+						client.sendData(packet);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

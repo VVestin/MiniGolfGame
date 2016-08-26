@@ -61,7 +61,7 @@ public class MainMenuState extends GameState implements Runnable {
 					Color c = p.nextColor();
 					for (int i = 0; i < Game.COLORS.length; i++) {
 						if (c.equals(Game.COLORS[i])) {
-							colorAvailable[i] = p.nextBoolean();
+							colorAvailable[i] = !p.nextBoolean();
 							if (confirmedColor != null && confirmedColor.equals(c) && colorAvailable[i])
 									setGameState(new PlayState(confirmedColor, socket));
 							break;

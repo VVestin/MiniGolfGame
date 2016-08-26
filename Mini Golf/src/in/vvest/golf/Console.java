@@ -18,7 +18,7 @@ public class Console {
 	private static final String VALID_CHARS = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789 .,?!@#$%^&*()-+_{[]}=\"':;<>/\\`~";
 	private static final int MAX_SIZE = 40;
 	
-	private boolean open, t;
+	private boolean open, tDown, enterDown;
 	private ArrayDeque<String> console;
 	private String currentEntry, lastEntry;
 	private OnlinePlayer player;
@@ -117,10 +117,11 @@ public class Console {
 	
 	public void keyPressed(KeyEvent e) {
 		int k = e.getKeyCode();
-		if (k == KeyEvent.VK_T && !open && !t) {
+		if ((k == KeyEvent.VK_T && !tDown || k == KeyEvent.VK_ENTER && !enterDown) && !open) {
 			open = true;
 			currentEntry = "";
-			t = true;
+			tDown = true;
+			enterDown = true;
 		} else if (k == KeyEvent.VK_ENTER && open && currentEntry.length() > 0) {
 			player.processChat(currentEntry);
 			lastEntry = currentEntry;
@@ -142,7 +143,9 @@ public class Console {
 	public void keyReleased(KeyEvent e) {
 		int k = e.getKeyCode();
 		if (k == KeyEvent.VK_T) {
-			t = false;
+			tDown = false;
+		} else if (k == KeyEvent.VK_ENTER) {
+			enterDown = false;
 		}
 	}
 	

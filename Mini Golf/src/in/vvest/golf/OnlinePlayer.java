@@ -42,9 +42,12 @@ public class OnlinePlayer extends Player implements Runnable {
 				DatagramPacket dataPacket = new DatagramPacket(data, data.length);
 				socket.receive(dataPacket);
 				IncomingPacket p = new IncomingPacket(data);
-				if (p.getType() == PacketType.CONNECT_ACK) {
+				if (p.getType() == PacketType.CONNECT) {
 					Color playerColor = p.nextColor();
-					console.write(Game.colorString(playerColor), " has Connected");
+					if (!players.contains(playerColor)) {
+						console.write(Game.colorString(playerColor), " has Connected");
+						players.add(new Player(getScoreCard().length, playerColor));
+					}	
 					if (playerColor.equals(getColor()))
 						connected = true;
 				} else if (p.getType() == PacketType.PLAYER_LISTING) {
