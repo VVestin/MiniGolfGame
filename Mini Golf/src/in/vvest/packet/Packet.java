@@ -3,6 +3,7 @@ package in.vvest.packet;
 import in.vvest.server.PacketType;
 
 public abstract class Packet {
+	
 	public static final int MAX_SIZE = 128;
 
 	protected PacketType type;

@@ -12,7 +12,6 @@ import java.util.Iterator;
 import in.vvest.game.Game;
 
 public class Console {
-
 	public static final int MAX_MESSAGE_LENGTH = 85;
 
 	private static final String VALID_CHARS = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789 .,?!@#$%^&*()-+_{[]}=\"':;<>/\\`~";

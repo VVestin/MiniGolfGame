@@ -9,7 +9,6 @@ import java.net.InetAddress;
 import in.vvest.packet.Packet;
 
 public class ConnectedPlayer {
-
 	private InetAddress address;
 	private int port;
 	private DatagramSocket socket;

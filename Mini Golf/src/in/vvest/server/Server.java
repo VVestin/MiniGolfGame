@@ -15,7 +15,6 @@ import in.vvest.packet.OutgoingPacket;
 import in.vvest.packet.Packet;
 
 public class Server extends Thread {
-
 	public static final int PORT = 9091;
 	public static final InetAddress ADDRESS = getAddress();
 
